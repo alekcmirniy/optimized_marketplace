@@ -31,5 +31,4 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@use "sass:color";
 </style>

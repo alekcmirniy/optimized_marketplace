@@ -42,6 +42,7 @@ export default defineComponent({
     padding: 0 5px;
 }
 .header-current-page {
+    margin-left: 5px;
     font-size: 20px;
     align-self: center;
     font-weight: 600;
