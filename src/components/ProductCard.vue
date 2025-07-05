@@ -1,13 +1,15 @@
 <template>
-    <div class="wrapper">
-        <section>
-            <img class="card-photo" v-bind:src="imagePath" />
-        </section>
-        <footer class="card-footer">
-            <p class="category-model">{{ cardDescription[0] }}</p>
-            <p class="brand">{{ cardDescription[1] }}</p>
-            <p class="price">{{ cardDescription[2] }}</p>
-        </footer>
+    <div class="card-wrapper">
+        <router-link :to="`/product/${productId}`">
+            <section>
+                <img class="card-photo" :src="imagePath"/>
+            </section>
+            <footer class="card-footer">
+                <p class="category-model">{{ cardDescription[0] }}</p>
+                <p class="brand">{{ cardDescription[1] }}</p>
+                <p class="price">{{ cardDescription[2] }}</p>
+            </footer>
+        </router-link>
     </div>
 </template>
 
@@ -17,6 +19,10 @@ import { defineComponent } from 'vue';
 export default defineComponent ({
     name: "ProductCard",
     props: {
+        productId: {
+            type: Number,
+            required: true,
+        },
         cardDescription: {
             type: Array,
             required: true
@@ -26,14 +32,6 @@ export default defineComponent ({
             required: true
         }
     },
-    data() {
-        return {
-
-        }
-    },
-    methods: {
-
-    }
 });
 
 </script>
@@ -41,13 +39,22 @@ export default defineComponent ({
 <style scoped lang="scss">
 @use "sass:color";
 @use '/src/assets/variables' as vars;
-.wrapper {
-    width: 45%;
-    margin: 10px;
+.card-wrapper {
+    width: 100%;
+    margin: 12px 0 0 10px;
     overflow: hidden;
-    border: solid 1px color.adjust(vars.$body-color, $blackness:50%);
-    border-radius: 10px;
-    background-color: color.adjust(vars.$body-color, $lightness:5%);
+    border-radius: 15px;
+    background-color: white;
+    padding: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    background: vars.$card-color;
+    transition: transform 0.2s ease;
+    color: vars.$supporting-golden-lighten;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6);
+    }
 }
 section {
     width: 100%;
@@ -59,33 +66,34 @@ section {
     object-fit: contain;
     max-width: 100%;
 }
-@media screen and (min-width: 769px) {
-    .wrapper {
-        max-width: 500px;
-    }
-}
 .card-footer {
     width: 100%;
     padding: 0 3px;
     display: flex;
     gap: 4px;
     flex-direction: column;
+    font-family: "Fira Sans", sans-serif;
 }
 .category-model {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    display: block;
-    width: 100%;
-    display: block;
-}   
+}
 .brand {
-    text-align:justify;
+    text-align:center;
     word-break: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .price {
-    font-weight: bold;
-    color: rgb(155, 60, 60);
-    text-align: center;
+    text-align:center;
+    word-break: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 800;
+    letter-spacing: 1px;
+    font-size: 16px;   
 }
 </style>

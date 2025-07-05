@@ -1,8 +1,10 @@
+import type { RouteLocationNormalized } from "vue-router";
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
 import StoreView from "@/views/StoreView.vue";
 import CartView from "@/views/CartView.vue";
 import ProfileView from "@/views/ProfileView.vue";
+import ProductView from "@/views/ProductView.vue";
 
 const routes = [
   {
@@ -24,6 +26,12 @@ const routes = [
     path: '/profile',
     name: "profile",
     component: ProfileView
+  },
+  {
+    path: '/product/:id',
+    name: "ProductView",
+    component: ProductView,
+    props: (route: RouteLocationNormalized) => ({id: Number(route.params.id)})
   }
 ];
 

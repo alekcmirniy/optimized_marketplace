@@ -9,7 +9,7 @@
                 aria-current="page"
                 >
                 {{ link.label }}
-                <img v-bind:src="link.icon" class="nav-icon" />
+                <img :src="link.icon" class="nav-icon" />
                 </router-link>
             </li>
         </ul>
@@ -41,8 +41,9 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @use "sass:color";
+@use '/src/assets/variables' as vars;
 $nav-item-color: rgb(238, 225, 235);
-$nav-bar-color: #89C1CC;
+$nav-bar-color: vars.$supporting-golden;
 
 .nav-bar {
     background-color: $nav-bar-color;
@@ -50,13 +51,14 @@ $nav-bar-color: #89C1CC;
     bottom: 0;
     right: 0;
     left: 0;
-    min-height: 8%;
+    min-height: 8vh;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
-    outline: solid 2px black;
+    outline: solid 1px black;
+    z-index: 1000;
 }
 .nav-item {
     display: flex;
@@ -81,13 +83,14 @@ $nav-bar-color: #89C1CC;
     padding: 0;
     flex-grow: 0.5;
     background-color: color.adjust($nav-bar-color, $lightness: 13%);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 .nav-icon {
     width: 20px;
     padding-top: 5px;
 }
 .nav-link:hover, .router-link-active {
-    transform: scale(1.15);
+    transform: scale(1.12);
 }
 .router-link-active {
     background-color: color.adjust($nav-bar-color, $lightness: 25%);
