@@ -26,9 +26,8 @@ export default defineComponent({
     methods: {
         closeModal(event: MouseEvent): void {
             const modal = this.$refs.modalRef as HTMLElement | undefined;
-            if (modal && !modal.contains(event.target as Node)) {
-                this.$emit("close");
-            } 
+            if (modal && !modal.contains(event.target as Node))
+                this.$emit('close');
         },
         handleKeyDown(event: KeyboardEvent): void {
             closeByButton(event, this.$emit);
@@ -38,11 +37,13 @@ export default defineComponent({
         setTimeout(() => {
             document.addEventListener("click", this.closeModal);
             document.addEventListener("keydown", this.handleKeyDown);
+            document.body.style.setProperty('overflow-y', 'hidden');
         }, 0);
     },
     unmounted() {
         document.removeEventListener("click", this.closeModal);
         document.removeEventListener("keydown", this.handleKeyDown);
+        document.body.style.removeProperty('overflow-y');
     }
 });
 </script>

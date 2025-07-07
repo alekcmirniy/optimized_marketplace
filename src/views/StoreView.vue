@@ -1,22 +1,25 @@
 <template>
     <div class="wrapper">
         <MainHeader :header="headerData" />
+
         <CategoriesSection @categories-section-open="openCategoriesSection"/>
-        <FilterSection @filter-section-open="openFilterSection" class="filter-section" @use-filters="useFilters"/>
+        <CategoriesModal v-if="categoriesIsOpen" @close="categoriesIsOpen = false" @use-categories="useCategories"/>
+        
+        <FilterSection @filter-section-open="openFilterSection" @use-filters="useFilters"/>
+        <FilterModal v-if="filtersIsOpen" @close="filtersIsOpen = false" @use-filters="useFilters"/>
+        
         <ul :key="componentKey" class="card-catalog">
             <li v-for="product of tempDatabase" :key="product.id">
                 <ProductCard :productId="product.id" :cardDescription="product.getCardDescription()" :imagePath="product.imagePath"/>
             </li>
         </ul>
-        <FilterModal v-if="filtersIsOpen" @close="filtersIsOpen = false" @use-filters="useFilters"/>
-        <CategoriesModal v-if="categoriesIsOpen" @close="categoriesIsOpen = false" @use-filters="useFilters" />
     </div>
 </template>
 
 <script lang="ts">
 import { productDatabase, Product, sortCatalogBy } from '@/backend/database';
 import MainHeader from '@/components/MainHeader.vue';
-import ProductCard from '@/components/ProductCard.vue'
+import ProductCard from '@/components/ProductCard.vue';
 import CategoriesSection from '@/components/CategoriesSection.vue';
 import FilterSection from '@/components/FilterSection.vue';
 import FilterModal from '@/components/FilterModal.vue';
@@ -36,13 +39,14 @@ export default {
             tempDatabase: productDatabase as Array<Product> || [],
             filtersIsOpen: false,
             categoriesIsOpen: false,
-            selectedCategories: ""
         }
     },
     methods: {
+        /*
         forceUpdate(): void {
             this.componentKey++;
         },
+        */
         openFilterSection(): void {
             this.filtersIsOpen = true;
         },
@@ -62,7 +66,6 @@ export default {
                 });
             if (response.status === 200) {
                 this.tempDatabase = response.data;
-                this.forceUpdate();
             }
             else console.log("Response status is not OK!");
             }
@@ -76,10 +79,39 @@ export default {
                 this.tempDatabase = await sortCatalogBy(this.tempDatabase as Array<Product>, selectedOption);
             console.log(`Фильтр ${selectedOption} применён!`);
         },
-        async useCategories(selectedOptions: Array<string>): Promise<void> {
+        async useCategories(selectedOptions: Array<Array<string>>, recursiveCall?: boolean): Promise<void> {
             this.categoriesIsOpen = false;
-            //this.tempDatabase = await filterCatalogBy(this.tempDatabase as Array<Product>, selectedOptions);
-            console.log(`Категории ${selectedOptions} применены!`);
+            const hasMain = selectedOptions[0].length > 0;
+            const hasOther = selectedOptions[1].length > 0;
+
+            if (!productDatabase.length) {
+                this.tempDatabase = [];
+                return;
+            }
+
+            if (!hasMain && !hasOther) {
+                this.tempDatabase = productDatabase;
+                return;
+            }
+
+            const mainCategoriesSet = new Set(selectedOptions[0]);
+            const otherCategoriesSet = new Set(selectedOptions[1]);
+
+            const andResults: Array<Product> = [];
+            const orResults: Array<Product> = [];
+            
+            productDatabase.forEach((product) => {
+                const matchesMain = !hasMain || mainCategoriesSet.has(product.categories.mainCategory);
+                const matchesOther = !hasOther || product.categories.otherCategories.some((cat) => (otherCategoriesSet.has(cat)));
+
+                if (matchesMain && matchesOther) {
+                    andResults.push(product);
+                }
+                else if (matchesMain || matchesOther) {
+                    orResults.push(product);
+                }
+            });
+            this.tempDatabase = andResults.length ? andResults : orResults;
         }
     }
 }
@@ -88,9 +120,6 @@ export default {
 <style scoped lang="scss">
 .wrapper {
     width: 100%;
-}
-.filter-section {
-    margin: 0 10px;
 }
 .card-catalog {
     display: grid;

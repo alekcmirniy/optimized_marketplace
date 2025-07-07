@@ -1,6 +1,6 @@
 <template>
     <div @click="$emit('categories-section-open')" class="categories-wrapper">
-        <span class="categories">Категории: {{ currentCategory }}</span>
+        <span class="categories">Категории: {{ currentCategories }}</span>
     </div>
 </template>
 
@@ -9,9 +9,10 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
     name: "CategoriesSection",
-    data() {
-        return {
-            currentCategory: "Все"
+    props: {
+        currentCategories: {
+            type: String,
+            default: "Все"
         }
     }
 });

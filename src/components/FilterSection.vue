@@ -5,8 +5,8 @@
             <p>&nbsp;Фильтр</p>
         </div>
         <div class="fast-filters">
-            <p @click="setActiveFilter('popular')" :class="{ 'active-filter': activeFilter === 'popular' }">Лучшее</p>
-            <p @click="setActiveFilter('new-ones-first')" :class="{ 'active-filter': activeFilter === 'new-ones-first' }">Новинки</p>
+            <p @click="setActiveFilter('popular', true)" :class="{ 'active-filter': activeFilter === 'popular' && fromFastFilters}">Лучшее</p>
+            <p @click="setActiveFilter('new-ones-first', true)" :class="{ 'active-filter': activeFilter === 'new-ones-first' && fromFastFilters }">Новинки</p>
         </div>
     </div>
 </template>
@@ -20,21 +20,20 @@ export default defineComponent ({
     data() {
         return {
             Icon: FilterIcon,
-            activeFilter: ""
+            activeFilter: "",
+            fromFastFilters: false
         }
-    },
+    },  
     methods: {
-        setActiveFilter(filterType: string) {
+        setActiveFilter(filterType: string, fromFastFilters?: boolean): void {
+            fromFastFilters ? this.fromFastFilters = true : undefined;
             this.activeFilter = this.activeFilter === filterType ? "" : filterType;
-            if (this.activeFilter) {
-                this.$emit('use-filters', filterType);
-            }
-            else {
-                this.$emit('use-filters', 'default');
-            }
+            
+            this.$emit('use-filters', this.activeFilter || 'default');
         }
     }
-})
+});
+    
 </script>
 
 <style scoped lang="scss">
@@ -45,6 +44,7 @@ export default defineComponent ({
     align-items: center;
     max-width: 100%;
     justify-content: space-around;
+    margin: 0 10px;
 }
 .filter-image {
     max-width: 30px;

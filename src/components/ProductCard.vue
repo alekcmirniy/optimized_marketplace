@@ -48,13 +48,7 @@ export default defineComponent ({
     padding: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     background: vars.$card-color;
-    transition: transform 0.2s ease;
     color: vars.$supporting-golden-lighten;
-
-    &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6);
-    }
 }
 section {
     width: 100%;

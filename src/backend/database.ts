@@ -143,7 +143,67 @@ const productDatabase: Array<Product> = [
     new Product(68, "Classic Attaché", "Hartmann", 22500, BagIcon, { mainCategory: "Сумка", otherCategories: ["Деловой стиль", "Винтаж"] }, "2023-02-26", 4.7, 312),
     new Product(69, "Power Laptop Bag", "Lenovo", 11500, BagIcon, { mainCategory: "Сумка", otherCategories: ["Деловой стиль", "Винтаж"] }, "2023-01-29", 4.3, 154),
     new Product(70, "Leather Organizer", "Saddleback", 19500, BagIcon, { mainCategory: "Сумка", otherCategories: ["Деловой стиль", "Кожа"] }, "2023-03-21", 4.8, 421),
-    new Product(71, "Urban Executive", "Kenneth Cole", 13800, BagIcon, { mainCategory: "Сумка", otherCategories: ["Деловой стиль", "Город"] }, "2023-02-07", 4.5, 245)
+    new Product(71, "Urban Executive", "Kenneth Cole", 13800, BagIcon, { mainCategory: "Сумка", otherCategories: ["Деловой стиль", "Город"] }, "2023-02-07", 4.5, 245),
+
+    new Product(72, "Bomber Jacket", "Alpha Industries", 18900, Icon, { mainCategory: "Куртки", otherCategories: ["Уличный стиль", "Зима"] }, "2023-04-05", 4.7, 287),
+    new Product(73, "Denim Jacket", "Levi's", 14500, Icon, { mainCategory: "Куртки", otherCategories: ["Джинсовая", "Весна"] }, "2023-04-12", 4.5, 231),
+    new Product(74, "Puffer Jacket", "The North Face", 24500, Icon, { mainCategory: "Куртки", otherCategories: ["Зима", "Утепленные"] }, "2023-04-18", 4.8, 356),
+    new Product(75, "Leather Jacket", "Schott NYC", 32000, Icon, { mainCategory: "Куртки", otherCategories: ["Кожаные", "Классика"] }, "2023-04-22", 4.9, 421),
+    new Product(76, "Windbreaker", "Adidas", 11200, Icon, { mainCategory: "Куртки", otherCategories: ["Спорт", "Демисезон"] }, "2023-04-08", 4.3, 187),
+
+    new Product(77, "501 Original", "Levi's", 8900, Icon, { mainCategory: "Джинсы", otherCategories: ["Классические", "Прямые"] }, "2023-04-15", 4.6, 312),
+    new Product(78, "Skinny Fit", "Diesel", 12500, Icon, { mainCategory: "Джинсы", otherCategories: ["Облегающие", "Мода"] }, "2023-04-20", 4.4, 254),
+    new Product(79, "Mom Jeans", "Wrangler", 9500, Icon, { mainCategory: "Джинсы", otherCategories: ["Высокая талия", "Ретро"] }, "2023-04-10", 4.7, 298),
+    new Product(80, "Slim Straight", "G-Star RAW", 13500, Icon, { mainCategory: "Джинсы", otherCategories: ["Узкие", "Премиум"] }, "2023-04-25", 4.5, 276),
+    new Product(81, "Relaxed Fit", "Lee", 7800, Icon, { mainCategory: "Джинсы", otherCategories: ["Свободные", "Комфорт"] }, "2023-04-14", 4.2, 165),
+
+    new Product(82, "Classic Logo", "Supreme", 6500, Icon, { mainCategory: "Футболки", otherCategories: ["Брендовые", "Лето"] }, "2023-04-07", 4.8, 432),
+    new Product(83, "Graphic Tee", "Stüssy", 5400, Icon, { mainCategory: "Футболки", otherCategories: ["Принт", "Уличный стиль"] }, "2023-04-16", 4.6, 345),
+    new Product(84, "Oversized", "Balenciaga", 18700, Icon, { mainCategory: "Футболки", otherCategories: ["Оверсайз", "Люкс"] }, "2023-04-24", 4.3, 198),
+    new Product(85, "Pocket Tee", "Carhartt", 7200, Icon, { mainCategory: "Футболки", otherCategories: ["Карман", "Базовые"] }, "2023-04-11", 4.5, 267),
+    new Product(86, "Vintage Wash", "Champion", 6100, Icon, { mainCategory: "Футболки", otherCategories: ["Ретро", "Винтаж"] }, "2023-04-19", 4.7, 321),
+
+    new Product(87, "Cargo Shorts", "C.P. Company", 11200, Icon, { mainCategory: "Шорты", otherCategories: ["Карго", "Утилитарные"] }, "2023-04-13", 4.4, 231),
+    new Product(88, "Denim Shorts", "Tommy Jeans", 8500, Icon, { mainCategory: "Шорты", otherCategories: ["Джинсовые", "Лето"] }, "2023-04-21", 4.6, 287),
+    new Product(89, "Running Shorts", "Nike", 6800, Icon, { mainCategory: "Шорты", otherCategories: ["Спорт", "Тренировки"] }, "2023-04-09", 4.5, 254),
+    new Product(90, "Chino Shorts", "Lacoste", 9800, Icon, { mainCategory: "Шорты", otherCategories: ["Чинос", "Классика"] }, "2023-04-17", 4.3, 187),
+    new Product(91, "Swim Trunks", "Patagonia", 7600, Icon, { mainCategory: "Шорты", otherCategories: ["Пляжные", "Быстросохнущие"] }, "2023-04-23", 4.7, 312),
+
+    new Product(92, "Dad Hat", "New Era", 4500, BagIcon, { mainCategory: "Аксессуары", otherCategories: ["Бейсболка", "Уличный стиль"] }, "2023-04-06", 4.5, 276),
+    new Product(93, "Silk Scarf", "Gucci", 12500, BagIcon, { mainCategory: "Аксессуары", otherCategories: ["Шелк", "Люкс"] }, "2023-04-26", 4.8, 387),
+    new Product(94, "Leather Belt", "Hermès", 9800, BagIcon, { mainCategory: "Аксессуары", otherCategories: ["Кожа", "Классика"] }, "2023-04-27", 4.7, 345),
+    new Product(95, "Aviator Sunglasses", "Ray-Ban", 14500, BagIcon, { mainCategory: "Аксессуары", otherCategories: ["Очки", "Ретро"] }, "2023-04-28", 4.9, 498),
+    new Product(96, "Cashmere Gloves", "Burberry", 8700, BagIcon, { mainCategory: "Аксессуары", otherCategories: ["Зима", "Премиум"] }, "2023-04-29", 4.6, 267),
+
+    new Product(97, "Parka", "Canada Goose", 42000, Icon, { mainCategory: "Куртки", otherCategories: ["Зима", "Утепленные"] }, "2023-05-01", 4.9, 543),
+    new Product(98, "Suede Jacket", "Polo Ralph Lauren", 24500, Icon, { mainCategory: "Куртки", otherCategories: ["Замша", "Классика"] }, "2023-05-02", 4.7, 321),
+    new Product(99, "Quilted Jacket", "Barbour", 18900, Icon, { mainCategory: "Куртки", otherCategories: ["Стеганые", "Осень"] }, "2023-05-03", 4.6, 287),
+    new Product(100, "Rain Jacket", "Stutterheim", 15600, Icon, { mainCategory: "Куртки", otherCategories: ["Дождевик", "Водоотталкивающие"] }, "2023-05-04", 4.5, 231),
+    new Product(101, "Harrington", "Baracuta", 17800, Icon, { mainCategory: "Куртки", otherCategories: ["Классика", "Гольф"] }, "2023-05-05", 4.8, 387),
+
+    new Product(102, "Tapered Fit", "Nudie Jeans", 13500, Icon, { mainCategory: "Джинсы", otherCategories: ["Суженные", "Премиум"] }, "2023-05-06", 4.7, 321),
+    new Product(103, "Wide Leg", "Issey Miyake", 16700, Icon, { mainCategory: "Джинсы", otherCategories: ["Широкие", "Дизайнерские"] }, "2023-05-07", 4.4, 198),
+    new Product(104, "Black Raw", "Acne Studios", 18900, Icon, { mainCategory: "Джинсы", otherCategories: ["Черные", "Сырой деним"] }, "2023-05-08", 4.9, 456),
+    new Product(105, "Cropped Jeans", "Mango", 9200, Icon, { mainCategory: "Джинсы", otherCategories: ["Укороченные", "Лето"] }, "2023-05-09", 4.3, 176),
+    new Product(106, "Destroyed", "Represent", 14500, Icon, { mainCategory: "Джинсы", otherCategories: ["Потертые", "Гранж"] }, "2023-05-10", 4.6, 287),
+
+    new Product(107, "Band Tee", "Rolling Stones", 7800, Icon, { mainCategory: "Футболки", otherCategories: ["Музыка", "Винтаж"] }, "2023-05-11", 4.8, 412),
+    new Product(108, "Long Sleeve", "Comme des Garçons", 14500, Icon, { mainCategory: "Футболки", otherCategories: ["Длинный рукав", "Дизайнерские"] }, "2023-05-12", 4.5, 276),
+    new Product(109, "Organic Cotton", "Arket", 6500, Icon, { mainCategory: "Футболки", otherCategories: ["Эко", "Базовые"] }, "2023-05-13", 4.7, 321),
+    new Product(110, "Striped Tee", "Saint James", 8900, Icon, { mainCategory: "Футболки", otherCategories: ["Полоски", "Морской стиль"] }, "2023-05-14", 4.6, 287),
+    new Product(111, "Boxy Fit", "COS", 7200, Icon, { mainCategory: "Футболки", otherCategories: ["Свободные", "Минимализм"] }, "2023-05-15", 4.4, 213),
+
+    new Product(112, "Linen Shorts", "Massimo Dutti", 8500, Icon, { mainCategory: "Шорты", otherCategories: ["Лен", "Лето"] }, "2023-05-16", 4.5, 254),
+    new Product(113, "Bermuda", "Hackett", 11200, Icon, { mainCategory: "Шорты", otherCategories: ["Бермуды", "Классика"] }, "2023-05-17", 4.3, 187),
+    new Product(114, "Cycling Shorts", "Adidas", 6800, Icon, { mainCategory: "Шорты", otherCategories: ["Велоспорт", "Облегающие"] }, "2023-05-18", 4.7, 312),
+    new Product(115, "Tailored Shorts", "Reiss", 9800, Icon, { mainCategory: "Шорты", otherCategories: ["Классические", "Офис"] }, "2023-05-19", 4.6, 276),
+    new Product(116, "Jersey Shorts", "Puma", 5400, Icon, { mainCategory: "Шорты", otherCategories: ["Спорт", "Комфорт"] }, "2023-05-20", 4.2, 154),
+
+    new Product(117, "Bucket Hat", "Prada", 12500, BagIcon, { mainCategory: "Аксессуары", otherCategories: ["Летняя", "Дизайнерская"] }, "2023-05-21", 4.8, 387),
+    new Product(118, "Wool Beanie", "Moncler", 6500, BagIcon, { mainCategory: "Аксессуары", otherCategories: ["Зима", "Шерсть"] }, "2023-05-22", 4.6, 287),
+    new Product(119, "Braided Belt", "Dolce & Gabbana", 11200, BagIcon, { mainCategory: "Аксессуары", otherCategories: ["Кожа", "Дизайнерский"] }, "2023-05-23", 4.7, 321),
+    new Product(120, "Round Sunglasses", "Persol", 15600, BagIcon, { mainCategory: "Аксессуары", otherCategories: ["Очки", "Ретро"] }, "2023-05-24", 4.9, 456),
+    new Product(121, "Silk Pocket Square", "Brioni", 4500, BagIcon, { mainCategory: "Аксессуары", otherCategories: ["Шелк", "Деловой"] }, "2023-05-25", 4.5, 231)
 ];
 
 let dailyId = 54;
@@ -173,10 +233,7 @@ const sortCatalogBy = async function(arr: Array<Product>, option: string, catego
             default:
                 console.error("Неверный параметр сортировки!");
                 return sortedArr;
-        };
-    if (categoriesSelected) {
-    //  sortedArr = filterCatalogBy();
-    }
+    };
 };
 /*
 const similarsProduct = productDatabase.filter((prod: Product) => {
