@@ -26,11 +26,13 @@ a {
   color: inherit;
 }
 button {
+  font-family: "Fira Sans", sans-serif;
   background: vars.$supporting-golden;
   border: none;
   border-radius: 10px;
   padding: 10px 20px;
-  font-weight: bold;
+  font-size: 16px;
+  font-weight: 500;
   color: vars.$body-color;
   transition: background 0.3s ease, transform 0.2s ease;
 

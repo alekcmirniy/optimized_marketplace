@@ -1,6 +1,6 @@
 <template>
     <div @click="$emit('categories-section-open')" class="categories-wrapper">
-        <span class="categories">Категории: {{ currentCategories }}</span>
+        <span class="categories">Категории: {{ currentCategories ? currentCategories : "Все"}}</span>
     </div>
 </template>
 
@@ -12,7 +12,6 @@ export default defineComponent({
     props: {
         currentCategories: {
             type: String,
-            default: "Все"
         }
     }
 });
@@ -26,11 +25,16 @@ export default defineComponent({
     margin-bottom: 20px;
 }
 .categories {
-    justify-content: center;
+    width: 100%;
+    text-align: center;
+    padding: 0 10px;
     min-height: 50px;
-    display: flex;
-    align-items: center;
+    line-height: 50px;
+    display: inline-block;
     border-radius: 15px;
     background-color: vars.$supporting-golden;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 </style>

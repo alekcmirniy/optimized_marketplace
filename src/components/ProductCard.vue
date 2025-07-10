@@ -74,6 +74,7 @@ section {
     text-overflow: ellipsis;
 }
 .brand {
+    font-style: italic;
     text-align:center;
     word-break: break-word;
     white-space: nowrap;
@@ -88,6 +89,5 @@ section {
     text-overflow: ellipsis;
     font-weight: 800;
     letter-spacing: 1px;
-    font-size: 16px;   
 }
 </style>

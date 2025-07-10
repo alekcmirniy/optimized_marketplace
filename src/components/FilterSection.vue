@@ -5,8 +5,8 @@
             <p>&nbsp;Фильтр</p>
         </div>
         <div class="fast-filters">
-            <p @click="setActiveFilter('popular', true)" :class="{ 'active-filter': activeFilter === 'popular' && fromFastFilters}">Лучшее</p>
-            <p @click="setActiveFilter('new-ones-first', true)" :class="{ 'active-filter': activeFilter === 'new-ones-first' && fromFastFilters }">Новинки</p>
+            <p @click="setActiveFilter('popular')" :class="{ 'active-filter': activeFilter === 'popular'}">Лучшее</p>
+            <p @click="setActiveFilter('new-ones-first')" :class="{ 'active-filter': activeFilter === 'new-ones-first'}">Новинки</p>
         </div>
     </div>
 </template>
@@ -17,23 +17,25 @@ import { defineComponent } from 'vue';
 
 export default defineComponent ({
     name: "FilterSection",
+    props: {
+        activeFilter: {
+            type: String,
+            default: ""
+        }
+    },
     data() {
         return {
-            Icon: FilterIcon,
-            activeFilter: "",
-            fromFastFilters: false
+            Icon: FilterIcon
         }
-    },  
+    },
     methods: {
-        setActiveFilter(filterType: string, fromFastFilters?: boolean): void {
-            fromFastFilters ? this.fromFastFilters = true : undefined;
-            this.activeFilter = this.activeFilter === filterType ? "" : filterType;
-            
-            this.$emit('use-filters', this.activeFilter || 'default');
+        setActiveFilter(filterType: string): void {
+            const newFilter = this.activeFilter === filterType ? "" : filterType; 
+            this.$emit('use-filters', newFilter);
         }
     }
 });
-    
+
 </script>
 
 <style scoped lang="scss">

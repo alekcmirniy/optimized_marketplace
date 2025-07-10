@@ -49,8 +49,6 @@ $nav-bar-color: vars.$supporting-golden;
     background-color: $nav-bar-color;
     position:fixed;
     bottom: 0;
-    right: 0;
-    left: 0;
     min-height: 8vh;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;

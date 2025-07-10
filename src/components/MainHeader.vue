@@ -42,7 +42,7 @@ export default defineComponent({
 @use '/src/assets/variables' as vars;
 @use "sass:color";
 .wrapper {
-    margin-top: 10px;
+    margin-top: 20px;
     display: flex;
     justify-content: space-between;
     padding: 0 5px;

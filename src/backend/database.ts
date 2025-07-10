@@ -212,7 +212,7 @@ const dailyProduct = productDatabase.find((product) => {return product.id === da
 const mainCategoriesStructure = new Set(productDatabase.map((item) => (item.categories.mainCategory)));
 const otherCategoriesStructure = new Set(productDatabase.flatMap((item) => (item.categories.otherCategories)));
 
-const sortCatalogBy = async function(arr: Array<Product>, option: string, categoriesSelected?: string) :Promise<Array<Product>> {
+const sortCatalogBy = async function(arr: Array<Product>, option: string) :Promise<Array<Product>> {
         const sortedArr = [...arr];
         switch (option) {
             case "descending-price":
@@ -235,18 +235,50 @@ const sortCatalogBy = async function(arr: Array<Product>, option: string, catego
                 return sortedArr;
     };
 };
-/*
-const similarsProduct = productDatabase.filter((prod: Product) => {
-    return (prod.categories.mainCategory == dailyProduct?.categories.mainCategory 
-        && prod.categories.otherCategories[0] == dailyProduct?.categories.otherCategories[0])
-});
-*/
+
+const applyFiltersAndCategories = async function(context: {
+    selectedCategories: Array<Array<string>>,
+    activeFilter: string
+}): Promise<Array<Product>> 
+    {
+    let filteredProducts = [...productDatabase];
+
+    const [mainCategories, otherCategories] = context.selectedCategories;
+    const hasMain = mainCategories?.length > 0;
+    const hasOther = otherCategories?.length > 0;
+
+    if (hasMain || hasOther) {
+        const mainSet = new Set(mainCategories);
+        const otherSet = new Set(otherCategories);
+
+        const andResults: Product[] = [];
+        const orResults: Product[] = [];
+
+        for (const product of filteredProducts) {
+            const matchMain = !hasMain || mainSet.has(product.categories.mainCategory);
+            const matchOther = !hasOther || product.categories.otherCategories.some(cat => otherSet.has(cat));
+
+            if (matchMain && matchOther) {
+                andResults.push(product);
+            } else if (matchMain || matchOther) {
+                orResults.push(product);
+            }
+        }
+        filteredProducts = andResults.length ? andResults : orResults;
+    }
+
+    if (context.activeFilter) {
+        filteredProducts = await sortCatalogBy(filteredProducts, context.activeFilter);
+    }
+    return filteredProducts;
+}
 export { dailyProduct };
 export { productDatabase };
 export { dailySlidesData };
 export { bestSlidesData };
 export { Product };
 
+export { applyFiltersAndCategories };
 export { sortCatalogBy };
 
 export type { Slide };

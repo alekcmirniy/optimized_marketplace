@@ -2,13 +2,13 @@
     <div class="wrapper">
         <MainHeader :header="headerData" />
 
-        <CategoriesSection @categories-section-open="openCategoriesSection"/>
+        <CategoriesSection :currentCategories="currentCategories" @categories-section-open="openCategoriesSection"/>
         <CategoriesModal v-if="categoriesIsOpen" @close="categoriesIsOpen = false" @use-categories="useCategories"/>
         
-        <FilterSection @filter-section-open="openFilterSection" @use-filters="useFilters"/>
+        <FilterSection @use-filters="useFilters" :activeFilter="activeFilter" @filter-section-open="openFilterSection" />
         <FilterModal v-if="filtersIsOpen" @close="filtersIsOpen = false" @use-filters="useFilters"/>
         
-        <ul :key="componentKey" class="card-catalog">
+        <ul class="card-catalog">
             <li v-for="product of tempDatabase" :key="product.id">
                 <ProductCard :productId="product.id" :cardDescription="product.getCardDescription()" :imagePath="product.imagePath"/>
             </li>
@@ -17,15 +17,16 @@
 </template>
 
 <script lang="ts">
-import { productDatabase, Product, sortCatalogBy } from '@/backend/database';
+import { productDatabase, Product, applyFiltersAndCategories } from '@/backend/database';
 import MainHeader from '@/components/MainHeader.vue';
 import ProductCard from '@/components/ProductCard.vue';
 import CategoriesSection from '@/components/CategoriesSection.vue';
 import FilterSection from '@/components/FilterSection.vue';
 import FilterModal from '@/components/FilterModal.vue';
 import CategoriesModal from '@/components/CategoriesModal.vue';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
     name: "StoreView",
     components: { MainHeader, ProductCard, CategoriesSection, FilterSection, FilterModal, CategoriesModal},
     data() {
@@ -35,86 +36,40 @@ export default {
                 searchRequired: true,
                 notificationsRequired: true,
             },
-            componentKey: 0,
             tempDatabase: productDatabase as Array<Product> || [],
+
             filtersIsOpen: false,
             categoriesIsOpen: false,
+
+            currentCategories: "",
+            activeFilter: "",
+            selectedCategories: [] as Array<Array<string>>
         }
     },
     methods: {
-        /*
-        forceUpdate(): void {
-            this.componentKey++;
-        },
-        */
         openFilterSection(): void {
             this.filtersIsOpen = true;
         },
         openCategoriesSection() {
             this.categoriesIsOpen = true;
         },
-        async useFilters(selectedOption: string) : Promise<void> {
+        async useFilters(selectedOption: string): Promise<void> {
             this.filtersIsOpen = false;
-                /* тут реализован примерный запрос когда будет бекенд
-            try {
-                
-                const response = await axios.get('/api/catalog', {
-                    params: { categories, selectedOption },
-                    method: 'get',
-                    timeout: 1000,
-                    headers: {"getFiltered": "true"}
-                });
-            if (response.status === 200) {
-                this.tempDatabase = response.data;
-            }
-            else console.log("Response status is not OK!");
-            }
-            catch(error) {
-                console.log("Ошибка при загрузке каталога:", error);            //нужны кнопки сброса категорий и сброса фильтров
-            }
-            */
-            if (selectedOption === 'default')
-                this.tempDatabase = productDatabase; 
-            else 
-                this.tempDatabase = await sortCatalogBy(this.tempDatabase as Array<Product>, selectedOption);
-            console.log(`Фильтр ${selectedOption} применён!`);
+            this.activeFilter = selectedOption;
+            await this.filterAndSort();
         },
-        async useCategories(selectedOptions: Array<Array<string>>, recursiveCall?: boolean): Promise<void> {
+        async useCategories(selectedOptions: Array<Array<string>>): Promise<void> {
             this.categoriesIsOpen = false;
-            const hasMain = selectedOptions[0].length > 0;
-            const hasOther = selectedOptions[1].length > 0;
-
-            if (!productDatabase.length) {
-                this.tempDatabase = [];
-                return;
-            }
-
-            if (!hasMain && !hasOther) {
-                this.tempDatabase = productDatabase;
-                return;
-            }
-
-            const mainCategoriesSet = new Set(selectedOptions[0]);
-            const otherCategoriesSet = new Set(selectedOptions[1]);
-
-            const andResults: Array<Product> = [];
-            const orResults: Array<Product> = [];
-            
-            productDatabase.forEach((product) => {
-                const matchesMain = !hasMain || mainCategoriesSet.has(product.categories.mainCategory);
-                const matchesOther = !hasOther || product.categories.otherCategories.some((cat) => (otherCategoriesSet.has(cat)));
-
-                if (matchesMain && matchesOther) {
-                    andResults.push(product);
-                }
-                else if (matchesMain || matchesOther) {
-                    orResults.push(product);
-                }
-            });
-            this.tempDatabase = andResults.length ? andResults : orResults;
+            this.selectedCategories = selectedOptions;
+            this.currentCategories = selectedOptions.flat().join(", ");
+            await this.filterAndSort();
+        },
+        async filterAndSort(): Promise<void> {
+            const context = this;
+            this.tempDatabase = await applyFiltersAndCategories(context);
         }
     }
-}
+});
 </script>
 
 <style scoped lang="scss">

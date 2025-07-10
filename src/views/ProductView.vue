@@ -1,6 +1,6 @@
 <template>
     <div v-if="product">
-        <ProductCard :productId="product.id" :cardDescription="product.getCardDescription()" :imagePath="product.imagePath"/>
+        <ProductCard class = "product" :productId="product.id" :cardDescription="product.getCardDescription()" :imagePath="product.imagePath"/>
     </div>
     <div v-else>
         <p>Товар не найден</p>
@@ -27,7 +27,7 @@ export default defineComponent({
         }
     },
     mounted() {
-        const founded = productDatabase.find((product) => (this.id === product.id));
+        const founded = productDatabase.find((product) => (this.id === product.id)) as Product;
         this.product = founded || null;
     }
 });
@@ -35,5 +35,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-
+.product {
+    margin: 0;
+}
 </style>

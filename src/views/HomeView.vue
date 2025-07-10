@@ -1,9 +1,9 @@
 <template>
     <div class="wrapper">
         <MainHeader :header="headerData" />
-        <div class="compilations-container">
+        <div>
             <p class="covering">Подборки дня</p>
-            <CompilationSlider class="compilations-slider" :slides="dailySlidesData" />
+            <CompilationSlider :slides="dailySlidesData" />
         </div>
         <div class="daily">
             <label class="daily-product-label covering">Товар дня</label>
@@ -17,17 +17,19 @@
                 </li>
             </ul>
             <button @click="getMoreBest()" class="best-footer covering">
-                ▽ Показать ещё
+                <img class="more-icon" :src="MoreIcon" :alt="'Показать ещё - иконка'" />
+                <p>Показать ещё</p>
             </button>
         </div>
-        <div class="compilations-container">
+        <div>
             <p class="covering">Популярные подборки</p>
-            <CompilationSlider class="compilations-slider" :slides="bestSlidesData" />
+            <CompilationSlider :slides="bestSlidesData" />
         </div>
     </div>
 </template>
 
 <script lang="ts">
+import MoreIcon from '@/components/icons/MoreProducts.png';
 import MainHeader from '@/components/MainHeader.vue';
 import ProductCard from '@/components/ProductCard.vue';
 import CompilationSlider from '@/components/CompilationSlider.vue';
@@ -44,6 +46,7 @@ export default {
                 searchRequired: true,
                 notificationsRequired: true
             },
+            MoreIcon: MoreIcon,
             bestRating: [] as Array<Product>,
             dailyProduct: dailyProduct as Product,
             dailySlidesData: dailySlidesData as Array<Slide>,
@@ -75,7 +78,7 @@ $block-covering-height: 40px;
     min-height: $block-covering-height;
     background-color: vars.$block-covering-color;
     color: vars.$supporting-golden;
-    font-size: 20px;
+    font-size: 24px;
     font-weight: 500;
     place-content: center;
     text-align: center;
@@ -92,8 +95,6 @@ $block-covering-height: 40px;
     padding-bottom: 6.5vh;
 }
 .daily {
-    margin: 0;
-    max-width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -105,21 +106,25 @@ $block-covering-height: 40px;
     border-top-right-radius: 20px;
     font-weight: 500 !important;
     font-size: 40px;
-    padding-top: 5px;
     background-color: vars.$card-color;
+    text-align: center;
 }
 .daily-product {
-    margin-top: 0;
     max-width: 43vh;
     border-top-right-radius: 0;
     border-top-left-radius: 0;
     box-shadow: none;
+    margin: 0;
+    font-size: 1.5em;
 }
 .best-wrapper {
     max-width: 100%;
 }
 .best-footer {
     width: 100%;
+    display: flex;
+    gap: 5px;
+    font-size: 16px;
 }
 .best-catalog {
     --counter-similar-rows: 2;    
@@ -135,15 +140,13 @@ $block-covering-height: 40px;
     grid-template-columns: repeat(3, 30vw);
     grid-template-rows: repeat(var(--counter-similar-rows), 21vh);
     overflow: hidden;
+    margin-bottom: 0;
+}
+.more-icon {
+    width: 20px;
 }
 .best-product {
     margin: 0;
-}
-.compilations-container {
-    margin-top: 20px;
-}
-.compilations-slider {
-    margin-top: 0;
 }
 @media screen and (min-width: 769px) {
     .daily {

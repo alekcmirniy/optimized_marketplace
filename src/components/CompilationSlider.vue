@@ -41,7 +41,6 @@ export default defineComponent({
 .slider-wrapper {
     min-height: 18vh;
     max-width: 100%;
-    margin: 15px 0;
 }
 .slider-image {
     max-width: 100%;
