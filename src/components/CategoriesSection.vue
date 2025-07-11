@@ -23,6 +23,7 @@ export default defineComponent({
 .categories-wrapper {
     margin: 10px;
     margin-bottom: 20px;
+    color: vars.$body-color;
 }
 .categories {
     width: 100%;

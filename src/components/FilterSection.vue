@@ -42,6 +42,7 @@ export default defineComponent ({
 @use "sass:color";
 @use '/src/assets/variables' as vars;
 .filter-wrapper {
+    color: vars.$body-color;
     display: flex;
     align-items: center;
     max-width: 100%;

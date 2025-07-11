@@ -1,6 +1,21 @@
 <template>
     <div v-if="product">
-        <ProductCard class = "product" :productId="product.id" :cardDescription="product.getCardDescription()" :imagePath="product.imagePath"/>
+        <img :src="product.imagePath" class="product-image"/>
+        <main class="description-container">
+            <p class="brand">{{ product.brand }} </p>
+            <div class="flexed">
+                <p class="model">{{ product.categories.mainCategory }}</p>
+                <p class="model">{{ product.model }}</p>
+            </div>
+            <p class="price">{{ product.getFormattedPrice() }} руб.</p>
+            <div class="rating-container">
+                <img class="rating-icon" :src="RatingIcon" /> 
+                <p class="rating">Рейтинг: {{ product.rating }}</p>
+            </div>
+            <button class="buy-button">
+                В корзину
+            </button>
+        </main>
     </div>
     <div v-else>
         <p>Товар не найден</p>
@@ -9,9 +24,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import ProductCard from '@/components/ProductCard.vue';
 import { productDatabase } from '@/backend/database';
 import { Product } from '@/backend/database'
+import RatingIcon from '@/components/icons/rating.png';
 export default defineComponent({
     name: "ProductView",
     props: {
@@ -20,10 +35,10 @@ export default defineComponent({
             required: true
         }
     },
-    components: { ProductCard },
     data() {
         return {
-            product: null as Product | null
+            product: null as Product | null,
+            RatingIcon: RatingIcon
         }
     },
     mounted() {
@@ -35,7 +50,67 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.product {
-    margin: 0;
+@use '@/assets/variables.scss' as vars;
+* {
+    color: vars.$body-color;
 }
+.product-image {
+    width: 100%;
+    background-color: vars.$card-color;
+    border-bottom: solid 1px vars.$supporting-golden-darken;
+}
+.description-container {
+    background: vars.$background-gradient;
+    border-radius: 20px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+
+    display: flex;
+    flex-direction: column;
+    //border: solid 1px white;
+    padding: 12px;
+
+    & p:not(.price, .brand) {
+        font-size: 24px;
+    }
+    & *:not(.flexed) {
+        margin-bottom: 10px;
+    }
+}
+.brand {
+    font-style: italic;
+    font-size: 16px;
+    opacity: 0.8;
+}
+.model {
+    font-size: 28px;
+    font-weight: 700;
+}
+.flexed {
+    display: flex;
+    gap: 10px;
+}
+.price {
+    place-self: center;
+    font-size: 36px;
+    font-weight: bold;
+    max-width: fit-content;
+    border-bottom: 1px solid vars.$supporting-golden-darken;
+}
+.rating-container {
+    display:flex;
+    align-items: center;
+    gap: 4px;
+}
+.rating-icon {
+    width: 20px;
+    height: auto;
+    object-fit: contain;
+}
+.buy-button {
+  background: vars.$card-color;
+  color: vars.$supporting-golden-lighten;
+  place-self: center;
+  width: 90%;
+}
+
 </style>

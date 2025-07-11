@@ -43,7 +43,7 @@ export default defineComponent({
 @use "sass:color";
 @use '/src/assets/variables' as vars;
 $nav-item-color: rgb(238, 225, 235);
-$nav-bar-color: vars.$supporting-golden;
+$nav-bar-color: vars.$supporting-golden-lighten;
 
 .nav-bar {
     background-color: $nav-bar-color;
@@ -73,6 +73,7 @@ $nav-bar-color: vars.$supporting-golden;
     text-decoration: none;
     display: flex;
     flex-direction: column;
+    letter-spacing: 1px;
     align-items: center;
     transition: 0.1s;
     border: solid 1px black;
@@ -80,7 +81,7 @@ $nav-bar-color: vars.$supporting-golden;
     border-radius: 10px;
     padding: 0;
     flex-grow: 0.5;
-    background-color: color.adjust($nav-bar-color, $lightness: 13%);
+    background: vars.$background-gradient;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 .nav-icon {

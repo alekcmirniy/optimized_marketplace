@@ -11,11 +11,17 @@
 
 <script lang="ts">
 import MainNavigation from "@/components/MainNavigation.vue";
+import { useProductStore } from "./stores/ProductStore";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
   name: "App",
-  components: { MainNavigation }
-};
+  components: { MainNavigation },
+  setup() {
+    const productStore = useProductStore();
+  }
+});
+
 
 </script>
 

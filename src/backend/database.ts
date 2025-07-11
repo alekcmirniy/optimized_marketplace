@@ -2,10 +2,10 @@ import Icon from "@/backend/productPhotos/Shoe1.png"
 import BagIcon from "@/backend/productPhotos/bag.png"
 class Product {
     constructor(
-        private readonly _id: number, 
-        private readonly model: string, 
-        private readonly brand: string, 
-        private readonly _price: number, 
+        private readonly _id: number,
+        private readonly _model: string,
+        private readonly _brand: string,
+        private readonly _price: number,
         private readonly _imagePath: string,
         private readonly _categories: Categories,
         private readonly _createdAt: string,
@@ -13,8 +13,8 @@ class Product {
         private readonly _visitsNumber: number
     ) {
         this._id = _id;
-        this.model = model;
-        this.brand = brand;
+        this._model = _model;
+        this._brand = _brand;
         this._price = _price;
         this._categories = _categories;
         this._imagePath = _imagePath;
@@ -23,7 +23,24 @@ class Product {
         this._visitsNumber = _visitsNumber;
     }
     public getCardDescription() :Array<string> {
-        return [`${this._categories.mainCategory} ${this.model}`, `${this.brand}`, `${this.price.toString()} руб.`];
+        return [`${this._categories.mainCategory} ${this.model}`, `${this.brand}`, `${this.getFormattedPrice()} руб.`];
+    }
+    public getFormattedPrice() : string {   
+        let outPrice = this.price.toString().split("").reverse();
+        let formatted = [];
+        for (let i = 0; i < outPrice.length; i++) {
+            if (i > 0 && i % 3 === 0) {
+                formatted.push(",");
+            }
+            formatted.push(outPrice[i]);
+        }
+        return formatted.reverse().join("");
+    }
+    public get model(): string {
+        return this._model;
+    }
+    public get brand(): string {
+        return this._brand;
     }
     public get price(): number {
         return this._price;

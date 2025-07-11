@@ -14,6 +14,8 @@ body {
   font-family: 'Playfair Display', serif;
   font-optical-sizing: auto;
   font-style: normal;
+  background: vars.$body-color;
+  color: vars.$supporting-golden;
 }
 * {
     box-sizing: border-box;
@@ -36,7 +38,7 @@ button {
   color: vars.$body-color;
   transition: background 0.3s ease, transform 0.2s ease;
 
-  &:hover {
+  &:hover, &:focus-within {
     background: vars.$supporting-golden_darken;
     transform: scale(1.05);
   }
