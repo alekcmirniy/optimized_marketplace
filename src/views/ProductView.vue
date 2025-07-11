@@ -24,9 +24,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { productDatabase } from '@/backend/database';
+import { useProductStore } from '@/stores/ProductStore';
 import { Product } from '@/backend/database'
 import RatingIcon from '@/components/icons/rating.png';
+
 export default defineComponent({
     name: "ProductView",
     props: {
@@ -41,9 +42,12 @@ export default defineComponent({
             RatingIcon: RatingIcon
         }
     },
+    setup() {
+        const productStore = useProductStore();
+        return { productStore };
+    },
     mounted() {
-        const founded = productDatabase.find((product) => (this.id === product.id)) as Product;
-        this.product = founded || null;
+        this.product = this.productStore.getProductById(this.id);
     }
 });
 

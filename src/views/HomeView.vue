@@ -33,10 +33,11 @@ import MoreIcon from '@/components/icons/MoreProducts.png';
 import MainHeader from '@/components/MainHeader.vue';
 import ProductCard from '@/components/ProductCard.vue';
 import CompilationSlider from '@/components/CompilationSlider.vue';
-import type { Slide } from '@/backend/database';
-import { bestSlidesData, dailySlidesData, Product, productDatabase, sortCatalogBy, dailyProduct } from '@/backend/database';
+import { useProductStore } from '@/stores/ProductStore';
+import { type Slide, Product } from '@/backend/database';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
     name: "HomeView",
     components: { MainHeader, ProductCard, CompilationSlider },
     data() {
@@ -47,14 +48,28 @@ export default {
                 notificationsRequired: true
             },
             MoreIcon: MoreIcon,
-            bestRating: [] as Array<Product>,
-            dailyProduct: dailyProduct as Product,
-            dailySlidesData: dailySlidesData as Array<Slide>,
-            bestSlidesData: bestSlidesData as Array<Slide>
         }
     },
+    setup() {
+        const productStore = useProductStore();
+        return { productStore };
+    },
     async created() {
-        this.bestRating = await sortCatalogBy(productDatabase, "best-rating");
+        await this.productStore.loadBestRating();
+    },
+    computed: {
+        bestRating(): Array<Product> {
+            return this.productStore.products as Array<Product>;
+        },
+        dailyProduct(): Product {
+            return this.productStore.dailyProduct as Product;
+        },
+        bestSlidesData(): Array<Slide> {
+            return this.productStore.bestSlides;
+        },
+        dailySlidesData(): Array<Slide> {
+            return this.productStore.dailySlides;
+        }
     },
     methods: {
         getMoreBest() : void {
@@ -67,7 +82,7 @@ export default {
             root.style.setProperty("--counter-similar-rows", nextValue.toString());
         }
     }
-};
+});
 
 </script>
 

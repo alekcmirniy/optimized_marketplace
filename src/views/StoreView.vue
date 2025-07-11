@@ -5,7 +5,7 @@
         <CategoriesSection :currentCategories="currentCategories" @categories-section-open="openCategoriesSection"/>
         <CategoriesModal v-if="categoriesIsOpen" @close="categoriesIsOpen = false" @use-categories="useCategories"/>
         
-        <FilterSection @use-filters="useFilters" :activeFilter="activeFilter" @filter-section-open="openFilterSection" />
+        <FilterSection @use-filters="useFilters" :activeFilter="productStore.currentFilter" @filter-section-open="openFilterSection" />
         <FilterModal v-if="filtersIsOpen" @close="filtersIsOpen = false" @use-filters="useFilters"/>
         
         <ul class="card-catalog">
@@ -17,7 +17,6 @@
 </template>
 
 <script lang="ts">
-import { productDatabase, Product, applyFiltersAndCategories } from '@/backend/database';
 import MainHeader from '@/components/MainHeader.vue';
 import ProductCard from '@/components/ProductCard.vue';
 import CategoriesSection from '@/components/CategoriesSection.vue';
@@ -25,6 +24,8 @@ import FilterSection from '@/components/FilterSection.vue';
 import FilterModal from '@/components/FilterModal.vue';
 import CategoriesModal from '@/components/CategoriesModal.vue';
 import { defineComponent } from 'vue';
+import { useProductStore } from '@/stores/ProductStore';
+import { Product } from '@/backend/database';
 
 export default defineComponent({
     name: "StoreView",
@@ -36,14 +37,21 @@ export default defineComponent({
                 searchRequired: true,
                 notificationsRequired: true,
             },
-            tempDatabase: productDatabase as Array<Product> || [],
 
             filtersIsOpen: false,
             categoriesIsOpen: false,
-
-            currentCategories: "",
-            activeFilter: "",
-            selectedCategories: [] as Array<Array<string>>
+        }
+    },
+    setup() {
+        const productStore = useProductStore();
+        return { productStore };
+    },
+    computed: {
+        tempDatabase(): Array<Product> {
+            return this.productStore.filteredProducts.length ? this.productStore.filteredProducts as Array<Product> : this.productStore.products as Array<Product>;
+        },
+        currentCategories(): string {
+            return this.productStore.categoriesString;
         }
     },
     methods: {
@@ -55,19 +63,12 @@ export default defineComponent({
         },
         async useFilters(selectedOption: string): Promise<void> {
             this.filtersIsOpen = false;
-            this.activeFilter = selectedOption;
-            await this.filterAndSort();
+            await this.productStore.applyFilters(selectedOption, this.productStore.currentCategories);
         },
         async useCategories(selectedOptions: Array<Array<string>>): Promise<void> {
             this.categoriesIsOpen = false;
-            this.selectedCategories = selectedOptions;
-            this.currentCategories = selectedOptions.flat().join(", ");
-            await this.filterAndSort();
+            await this.productStore.applyFilters(this.productStore.currentFilter, selectedOptions);
         },
-        async filterAndSort(): Promise<void> {
-            const context = this;
-            this.tempDatabase = await applyFiltersAndCategories(context);
-        }
     }
 });
 </script>

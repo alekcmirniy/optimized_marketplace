@@ -254,6 +254,7 @@ const sortCatalogBy = async function(arr: Array<Product>, option: string) :Promi
 };
 
 const applyFiltersAndCategories = async function(context: {
+    products: Array<Product>
     selectedCategories: Array<Array<string>>,
     activeFilter: string
 }): Promise<Array<Product>> 
