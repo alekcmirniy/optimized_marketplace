@@ -19,6 +19,10 @@ export default defineComponent({
   components: { MainNavigation },
   setup() {
     const productStore = useProductStore();
+    return { productStore }
+  },
+  created() {
+    this.productStore.initializeProductStructure();
   }
 });
 

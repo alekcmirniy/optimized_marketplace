@@ -59,7 +59,7 @@ export default defineComponent({
     },
     computed: {
         bestRating(): Array<Product> {
-            return this.productStore.products as Array<Product>;
+            return this.productStore.allProducts as Array<Product>;
         },
         dailyProduct(): Product {
             return this.productStore.dailyProduct as Product;

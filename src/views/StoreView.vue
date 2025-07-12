@@ -48,7 +48,7 @@ export default defineComponent({
     },
     computed: {
         tempDatabase(): Array<Product> {
-            return this.productStore.filteredProducts.length ? this.productStore.filteredProducts as Array<Product> : this.productStore.products as Array<Product>;
+            return this.productStore.filteredProducts.length ? this.productStore.filteredProducts as Array<Product> : this.productStore.allProducts as Array<Product>;
         },
         currentCategories(): string {
             return this.productStore.categoriesString;
