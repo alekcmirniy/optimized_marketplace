@@ -12,7 +12,7 @@
                 <img class="rating-icon" :src="RatingIcon" /> 
                 <p class="rating">Рейтинг: {{ product.rating }}</p>
             </div>
-            <button class="buy-button">
+            <button @click="handleToCart(product.id)" class="buy-button">
                 В корзину
             </button>
         </main>
@@ -25,6 +25,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useProductStore } from '@/stores/ProductStore';
+import { useCartStore } from '@/stores/CartStore';
 import { Product } from '@/backend/database'
 import RatingIcon from '@/components/icons/rating.png';
 
@@ -39,12 +40,15 @@ export default defineComponent({
     data() {
         return {
             product: null as Product | null,
-            RatingIcon: RatingIcon
+            RatingIcon: RatingIcon,
+            productStore: useProductStore(),
+            cartStore: useCartStore()
         }
     },
-    setup() {
-        const productStore = useProductStore();
-        return { productStore };
+    methods: {
+        handleToCart(id: number): void {
+            this.cartStore.addToCart(id);
+        }
     },
     mounted() {
         this.product = this.productStore.getProductById(this.id);

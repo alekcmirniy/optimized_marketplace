@@ -17,9 +17,10 @@ import { defineComponent } from "vue";
 export default defineComponent({
   name: "App",
   components: { MainNavigation },
-  setup() {
-    const productStore = useProductStore();
-    return { productStore }
+  data() {
+    return {
+      productStore: useProductStore()
+    }
   },
   created() {
     this.productStore.initializeProductStructure();

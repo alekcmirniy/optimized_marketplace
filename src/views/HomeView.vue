@@ -48,11 +48,8 @@ export default defineComponent({
                 notificationsRequired: true
             },
             MoreIcon: MoreIcon,
+            productStore: useProductStore()
         }
-    },
-    setup() {
-        const productStore = useProductStore();
-        return { productStore };
     },
     async created() {
         await this.productStore.loadBestRating();
@@ -107,7 +104,7 @@ $block-covering-height: 40px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 .wrapper {
-    padding-bottom: 6.5vh;
+    padding-bottom: vars.$nav-bar-height
 }
 .daily {
     display: flex;

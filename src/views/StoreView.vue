@@ -40,11 +40,8 @@ export default defineComponent({
 
             filtersIsOpen: false,
             categoriesIsOpen: false,
+            productStore: useProductStore()
         }
-    },
-    setup() {
-        const productStore = useProductStore();
-        return { productStore };
     },
     computed: {
         tempDatabase(): Array<Product> {
@@ -74,6 +71,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+@use '@/assets/_variables.scss' as vars;
 .wrapper {
     width: 100%;
 }
@@ -82,7 +80,7 @@ export default defineComponent({
     grid-template-columns: 45% 45%;
     gap: 20px;
     list-style-type: none;
-    padding-bottom: 8vh;
+    padding-bottom: vars.$nav-bar-height;
 }
 @media screen and (min-width: 769px) {
     .card-catalog {

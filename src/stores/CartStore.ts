@@ -3,7 +3,7 @@ import { useProductStore } from "./ProductStore";
 
 export const useCartStore = defineStore("CartStore", {
     state: () => ({
-        cartProducts: new Map<number, number>(),     //Map<id, quantity>
+        cartProductsStructure: new Map<number, number>(),     //Map<id, quantity>
         fullPrice: 0
     }),
     
@@ -18,20 +18,22 @@ export const useCartStore = defineStore("CartStore", {
                 return;
             }
 
-            this.cartProducts.set(id, this.cartProducts.get(id) || 0 + 1);
+            this.cartProductsStructure.set(id, (this.cartProductsStructure.get(id) || 0) + 1);
             this.recountFullPrice(id, "added");
         },
         removeFromCart(id: number): void {
-            if (!this.cartProducts.has(id)) {
+            if (!this.cartProductsStructure.has(id)) {
                 console.error("Невозможно удалить - товар отсутствует в корзине!");
                 return;
             }
-            this.cartProducts.delete(id);
+            this.cartProductsStructure.set(id, (this.cartProductsStructure.get(id) || 0) - 1);
+            if (this.cartProductsStructure.get(id) === 0) this.cartProductsStructure.delete(id);
+
             this.recountFullPrice(id, "deleted");
         },
         clearCart(): void {
-            this.cartProducts.clear();
-            if (this.cartProducts.size) console.error("Ошибка очистки корзины!");
+            this.cartProductsStructure.clear();
+            if (this.cartProductsStructure.size) console.error("Ошибка очистки корзины!");
             this.fullPrice = 0;
         },
         recountFullPrice(id: number, operation: string): void {
@@ -53,8 +55,7 @@ export const useCartStore = defineStore("CartStore", {
 
     getters: {
         getProductsFromCart: (state) => {
-            const productsData = useProductStore().allProducts;
-            return productsData.filter((product) => (state.cartProducts.has(product.id)))
+            return useProductStore().allProducts.filter((product) => (state.cartProductsStructure.has(product.id)))
         }
     }
 });

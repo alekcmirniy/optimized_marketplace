@@ -49,7 +49,7 @@ $nav-bar-color: vars.$supporting-golden-lighten;
     background-color: $nav-bar-color;
     position:fixed;
     bottom: 0;
-    min-height: 8vh;
+    height: vars.$nav-bar-height;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     display: flex;
