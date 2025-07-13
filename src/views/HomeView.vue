@@ -88,7 +88,10 @@ export default defineComponent({
 $block-covering-height: 40px;
 .covering {
     min-height: $block-covering-height;
-    background-color: vars.$block-covering-color;
+    &:not(.daily-product-label) {
+        background: linear-gradient(135deg, rgba(255, 215, 100, 0.08), rgba(255, 200, 100, 0.12)),rgb(44, 44, 44);
+    }
+
     color: vars.$supporting-golden;
     font-size: 24px;
     font-weight: 500;
@@ -100,7 +103,7 @@ $block-covering-height: 40px;
 .covering:not(.best-footer) {
     margin-top: 20px;
 }
-.covering {
+.covering:not(.daily-product-label) {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 .wrapper {
@@ -110,16 +113,20 @@ $block-covering-height: 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    background: linear-gradient(135deg, #2c2c2c, #4b3d2a, #7c623e);
+    padding: 0 20px 20px 20px;
+    border-radius: 24px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
 }
 .daily-product-label {
     width: 43vh;
     height: 50px;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
     font-weight: 500 !important;
     font-size: 40px;
-    background-color: vars.$card-color;
     text-align: center;
+    background: none;
 }
 .daily-product {
     max-width: 43vh;
@@ -127,7 +134,21 @@ $block-covering-height: 40px;
     border-top-left-radius: 0;
     box-shadow: none;
     margin: 0;
-    font-size: 1.5em;
+    font-size: 1.8rem;
+    background: none;
+    color: #f4e4b5;
+    padding-bottom: 12px;
+    z-index: 2;
+}
+.daily::after {
+  content: "";
+  position: absolute;
+  top: -30%;
+  left: -30%;
+  width: 160%;
+  height: 160%;
+  background: radial-gradient(circle at center, rgba(255, 215, 100, 0.05), transparent 70%);
+  z-index: 1;
 }
 .best-wrapper {
     max-width: 100%;
@@ -141,13 +162,14 @@ $block-covering-height: 40px;
 .best-catalog {
     --counter-similar-rows: 2;    
     --catalog-max-height: calc((var(--card-height) + var(--gap-y)) * var(--counter-similar-rows));
-    --gap-y: 10px;
+    --gap-y: 20px;
     --card-height: 21vh;
     max-height: var(--catalog-max-height);
     margin: 10px 0;
     display: grid;
     justify-content: center;
-    gap: 10px;
+    gap: 20px 10px;
+
     list-style-type: none;
     grid-template-columns: repeat(3, 30vw);
     grid-template-rows: repeat(var(--counter-similar-rows), 21vh);
@@ -158,7 +180,7 @@ $block-covering-height: 40px;
     width: 20px;
 }
 .best-product {
-    margin: 0;
+    margin: 0;  
 }
 @media screen and (min-width: 769px) {
     .daily {

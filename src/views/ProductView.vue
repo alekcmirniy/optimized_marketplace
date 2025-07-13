@@ -65,11 +65,10 @@ export default defineComponent({
 .product-image {
     width: 100%;
     background-color: vars.$card-color;
-    border-bottom: solid 1px vars.$supporting-golden-darken;
 }
 .description-container {
     background: vars.$background-gradient;
-    border-radius: 20px;
+    border-radius: 0 0 20px 20px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 
     display: flex;

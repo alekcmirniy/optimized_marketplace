@@ -12,6 +12,7 @@
 <script lang="ts">
 import MainNavigation from "@/components/MainNavigation.vue";
 import { useProductStore } from "./stores/ProductStore";
+import { useCartStore } from "./stores/CartStore";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -19,12 +20,15 @@ export default defineComponent({
   components: { MainNavigation },
   data() {
     return {
-      productStore: useProductStore()
+      productStore: useProductStore(),
+      cartStore: useCartStore()
     }
   },
   created() {
     this.productStore.initializeProductStructure();
-  }
+    this.cartStore.hydrateFromStorage();
+    this.cartStore.initCartStore();
+  },
 });
 
 

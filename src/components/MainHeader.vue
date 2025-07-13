@@ -7,8 +7,8 @@
             <p class="header-current-page">{{ header.headerText }}</p>
         </div>
         <aside class = "header-aside">
-            <img v-show="header.searchRequired" :src="iconPaths.SearchIcon" class="header-icons search-icon"/>
-            <img v-show="header.notificationsRequired" :src="iconPaths.NotificationsIcon" class="header-icons notification-icon"/>
+            <img v-show="header.searchRequired" :src="iconPaths.SearchIcon" class="header-icons"/>
+            <img v-show="header.notificationsRequired" :src="iconPaths.NotificationsIcon" class="header-icons"/>
         </aside>
     </div>
 </template>
@@ -81,10 +81,11 @@ export default defineComponent({
     gap: 10px;
 }
 .header-icons {
-    padding: 8px;
+    padding: 6px;
     max-width: 5.5vh;
-    border-radius: 8px;
-    background-color: vars.$supporting-golden;
+    border: 1px solid #d6b65c;
+    border-radius: 12px;
+    background-color: transparent;
     box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 </style>

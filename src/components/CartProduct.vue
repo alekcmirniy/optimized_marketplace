@@ -63,7 +63,7 @@ export default defineComponent({
     text-overflow: ellipsis;
 }
 .brand {
-    opacity: 0.8;
+    color: rgba(0,0,0,0.8);
     font-style: italic;
 }
 .price {

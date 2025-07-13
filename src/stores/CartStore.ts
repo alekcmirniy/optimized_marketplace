@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { useProductStore } from "./ProductStore";
+import { hydrate, watch } from "vue";
 
 export const useCartStore = defineStore("CartStore", {
     state: () => ({
@@ -8,6 +9,32 @@ export const useCartStore = defineStore("CartStore", {
     }),
     
     actions: {
+        initCartStore() {
+            watch(
+                () => useCartStore().$state,
+                (state) => {
+                    const serializableState = {
+                        cartProductsStructure: Array.from(state.cartProductsStructure.entries()),
+                        fullPrice: state.fullPrice
+                    };
+                    localStorage.setItem("cart", JSON.stringify(serializableState));
+                },
+                {deep: true}
+            );
+        },
+        hydrateFromStorage() {
+            const saved = localStorage.getItem("cart");
+            if (!saved) return;
+
+            try {
+                const parsed = JSON.parse(saved);
+                this.cartProductsStructure = new Map(parsed.cartProductsStructure);
+                this.fullPrice = parsed.fullPrice;
+            }
+            catch (e) {
+                console.error("Ошибка при восстановлении корзины!");
+            }
+        },
         addToCart(id: number): void {
             const productsData = useProductStore();
             const product = productsData.productsStructure.get(id);
@@ -26,8 +53,13 @@ export const useCartStore = defineStore("CartStore", {
                 console.error("Невозможно удалить - товар отсутствует в корзине!");
                 return;
             }
-            this.cartProductsStructure.set(id, (this.cartProductsStructure.get(id) || 0) - 1);
-            if (this.cartProductsStructure.get(id) === 0) this.cartProductsStructure.delete(id);
+            const nextQuantity = (this.cartProductsStructure.get(id) || 0) - 1;
+            if (nextQuantity <= 0) {
+                this.cartProductsStructure.delete(id);
+            }
+            else {
+                this.cartProductsStructure.set(id, (this.cartProductsStructure.get(id) || 0) - 1);
+            }
 
             this.recountFullPrice(id, "deleted");
         },

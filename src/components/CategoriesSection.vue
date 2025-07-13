@@ -33,7 +33,7 @@ export default defineComponent({
     line-height: 50px;
     display: inline-block;
     border-radius: 15px;
-    background-color: vars.$supporting-golden;
+    background: vars.$background-gradient;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

@@ -46,7 +46,7 @@ export default defineComponent ({
     border-radius: 15px;
     background-color: white;
     padding: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     background: vars.$card-color;
     color: vars.$supporting-golden-lighten;
 }
@@ -66,9 +66,10 @@ section {
     display: flex;
     gap: 4px;
     flex-direction: column;
-    font-family: "Fira Sans", sans-serif;
+    font-family: "Playfair Display", serif;
 }
 .category-model {
+    font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -89,5 +90,6 @@ section {
     text-overflow: ellipsis;
     font-weight: 800;
     letter-spacing: 1px;
+    color: #e2c48f;
 }
 </style>

@@ -7,4 +7,5 @@ $supporting-golden-lighten: #F5DFA2;
 $supporting-golden-darken: #A67C00; 
 $block-covering-color: color.adjust($body-color, $lightness:10%);
 $background-gradient: linear-gradient(135deg, #f1e3b3, #d6b95f);
+$background-gradient-active: linear-gradient(135deg, #d6b95f, #b28c30);
 $nav-bar-height: 8vh;

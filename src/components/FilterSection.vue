@@ -59,7 +59,7 @@ export default defineComponent ({
     display: flex;
     align-items: center;
     border-radius: 15px;
-    background-color: vars.$supporting-golden;
+    background: vars.$background-gradient;
 }
 .fast-filters {
     width: 100%;

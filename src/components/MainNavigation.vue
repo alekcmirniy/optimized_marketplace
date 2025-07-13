@@ -46,7 +46,6 @@ $nav-item-color: rgb(238, 225, 235);
 $nav-bar-color: vars.$supporting-golden-lighten;
 
 .nav-bar {
-    background-color: $nav-bar-color;
     position:fixed;
     bottom: 0;
     height: vars.$nav-bar-height;
@@ -57,6 +56,8 @@ $nav-bar-color: vars.$supporting-golden-lighten;
     align-items: center;
     outline: solid 1px black;
     z-index: 1000;
+    backdrop-filter: blur(8px);
+    background: rgba(20, 20, 20, 0.6);
 }
 .nav-item {
     display: flex;
@@ -75,13 +76,12 @@ $nav-bar-color: vars.$supporting-golden-lighten;
     flex-direction: column;
     letter-spacing: 1px;
     align-items: center;
-    transition: 0.1s;
-    border: solid 1px black;
-    border-bottom: none;
-    border-radius: 10px;
+    transition: 0.15s;
     padding: 0;
     flex-grow: 0.5;
     background: vars.$background-gradient;
+    border-radius: 10px;
+    opacity: 0.75;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 .nav-icon {
@@ -89,9 +89,9 @@ $nav-bar-color: vars.$supporting-golden-lighten;
     padding-top: 5px;
 }
 .nav-link:hover, .router-link-active {
-    transform: scale(1.12);
+    transform: scale(1.07);
 }
 .router-link-active {
-    background-color: color.adjust($nav-bar-color, $lightness: 25%);
+    opacity: 1;
 }
 </style>
