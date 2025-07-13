@@ -1,16 +1,18 @@
 <template>
-    <div class="modal-wrapper">
-        <div class="modal-content" ref="modalRef">
-            <form>
-                <label><input type="radio" value="ascending-price" v-model="selectedOption" name="filter"/>По возрастанию цены</label>
-                <label><input type="radio" value="descending-price" v-model="selectedOption" name="filter" />По убыванию цены</label>
-                <label><input type="radio" value="new-ones-first" v-model="selectedOption" name="filter"/>Сначала новые</label>
-                <label><input type="radio" value="best-rating" v-model="selectedOption" name="filter"/>Высокий рейтинг</label>
-                <label><input type="radio" value="popular" v-model="selectedOption" name="filter"/>Популярные</label>
-            </form>
-            <button @click="$emit('use-filters', selectedOption)" :disabled="!selectedOption" class="modal-button">Применить</button>
+    <teleport to='body'>
+        <div class="modal-wrapper">
+            <div class="modal-content" ref="modalRef">
+                <form>
+                    <label><input type="radio" value="ascending-price" v-model="selectedOption" name="filter"/>По возрастанию цены</label>
+                    <label><input type="radio" value="descending-price" v-model="selectedOption" name="filter" />По убыванию цены</label>
+                    <label><input type="radio" value="new-ones-first" v-model="selectedOption" name="filter"/>Сначала новые</label>
+                    <label><input type="radio" value="best-rating" v-model="selectedOption" name="filter"/>Высокий рейтинг</label>
+                    <label><input type="radio" value="popular" v-model="selectedOption" name="filter"/>Популярные</label>
+                </form>
+                <button @click="$emit('use-filters', selectedOption)" :disabled="!selectedOption" class="modal-button">Применить</button>
+            </div>
         </div>
-    </div>
+    </teleport>
 </template>
 
 <script lang="ts">
@@ -30,9 +32,10 @@ export default defineComponent({
                 this.$emit('close');
         },
         handleKeyDown(event: KeyboardEvent): void {
-            closeByButton(event, this.$emit);
+            closeByButton(event, this.$emit as (event: string, ...args: any[]) => void);
         }
     },
+    emits: ['use-filters', 'close'],
     mounted() {
         setTimeout(() => {
             document.addEventListener("click", this.closeModal);
@@ -52,6 +55,7 @@ export default defineComponent({
 @use '/src/assets/variables' as vars;
 @use "sass:color";
 .modal-wrapper {
+    backdrop-filter: blur(8px);
     background: rgba(0, 0, 0, 0.6);
     position: fixed;
     top: 0;

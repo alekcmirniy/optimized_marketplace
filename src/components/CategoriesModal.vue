@@ -1,27 +1,29 @@
 <template>
-    <div class="modal-wrapper">
-        <div class="modal-content" ref="modalRef">
-            <form>
-                <p class="types">Основные</p>
-                <ul class="categories-list">
-                    <li v-for="(mainCategory, idx) of mainCategories" :key="idx">
-                        <label>
-                            <input type="checkbox" v-model="selectedOptions[0]" :value="mainCategory" name="mainCategory">{{ mainCategory }}
-                        </label>
-                    </li>
-                </ul>
-                <p class="types">Дополнительные</p>
-                <ul class="categories-list">
-                    <li v-for="(otherCategory, idx) of otherCategories" :key="idx">
-                        <label>
-                            <input type="checkbox" v-model="selectedOptions[1]" :value="otherCategory" name="otherCategory">{{ otherCategory }}
-                        </label>
-                    </li>
-                </ul>
-            </form>
-            <button @click="$emit('use-categories', selectedOptions)" :disabled="!selectedOptions[0].length && !selectedOptions[1].length">Применить</button>
+    <teleport to='body'>
+        <div class="modal-wrapper">
+            <div class="modal-content" ref="modalRef">
+                <form>
+                    <p class="types">Основные</p>
+                    <ul class="categories-list">
+                        <li v-for="(mainCategory, idx) of mainCategories" :key="idx">
+                            <label>
+                                <input type="checkbox" v-model="selectedOptions[0]" :value="mainCategory" name="mainCategory">{{ mainCategory }}
+                            </label>
+                        </li>
+                    </ul>
+                    <p class="types">Дополнительные</p>
+                    <ul class="categories-list">
+                        <li v-for="(otherCategory, idx) of otherCategories" :key="idx">
+                            <label>
+                                <input type="checkbox" v-model="selectedOptions[1]" :value="otherCategory" name="otherCategory">{{ otherCategory }}
+                            </label>
+                        </li>
+                    </ul>
+                </form>
+                <button @click="$emit('use-categories', selectedOptions)" :disabled="!selectedOptions[0].length && !selectedOptions[1].length">Применить</button>
+            </div>
         </div>
-    </div>
+    </teleport>
 </template>
 
 <script lang="ts">
@@ -40,14 +42,15 @@ export default defineComponent({
     },
     methods: {
         closeModal(event: MouseEvent): void {
-            const modal = this.$refs.modalRef as HTMLElement || undefined;
+            const modal = this.$refs.modalRef as HTMLElement | undefined;
             if (modal && !modal.contains(event.target as Node))
                 this.$emit('close');
         },
         handleKeyDown(event: KeyboardEvent): void {
-            closeByButton(event, this.$emit);
+            closeByButton(event, this.$emit as (event: string, ...args: any[]) => void);
         }
     },
+    emits: ['use-categories', 'close'],
     mounted() {
         setTimeout(() => {
             document.addEventListener("click", this.closeModal);
@@ -59,7 +62,6 @@ export default defineComponent({
         document.removeEventListener("keydown", this.handleKeyDown);
         document.removeEventListener("keydown", this.handleKeyDown);
         document.body.style.removeProperty('overflow-y');
-
     }
 });
 </script>
@@ -68,6 +70,7 @@ export default defineComponent({
 @use '/src/assets/variables' as vars;
 @use "sass:color";
 .modal-wrapper {
+    backdrop-filter: blur(8px);
     background: rgba(0, 0, 0, 0.6);
     position: fixed;
     top: 0;
@@ -149,7 +152,7 @@ label {
         position: relative;
         width: 10px;
         height: 10px;
-        background: vars.$supporting-golden;
+        background: vars.$background-gradient-active;
         box-shadow: inset 0 0 5px rgb(0 0 0 / 0.2);
         border-radius: 100%;
 

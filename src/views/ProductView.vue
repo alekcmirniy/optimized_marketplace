@@ -65,6 +65,7 @@ export default defineComponent({
 .product-image {
     width: 100%;
     background-color: vars.$card-color;
+    display: block;
 }
 .description-container {
     background: vars.$background-gradient;
@@ -73,7 +74,6 @@ export default defineComponent({
 
     display: flex;
     flex-direction: column;
-    //border: solid 1px white;
     padding: 12px;
 
     & p:not(.price, .brand) {
@@ -101,7 +101,7 @@ export default defineComponent({
     font-size: 36px;
     font-weight: bold;
     max-width: fit-content;
-    border-bottom: 1px solid vars.$supporting-golden-darken;
+    border-bottom: 1px solid vars.$supporting-golden;
 }
 .rating-container {
     display:flex;

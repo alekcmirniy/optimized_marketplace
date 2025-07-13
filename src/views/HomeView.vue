@@ -16,10 +16,16 @@
                     <ProductCard class="best-product" :productId="product.id" :cardDescription="product.getCardDescription()" :imagePath="product.imagePath"/>
                 </li>
             </ul>
-            <button @click="getMoreBest()" class="best-footer covering">
-                <img class="more-icon" :src="MoreIcon" :alt="'Показать ещё - иконка'" />
-                <p>Показать ещё</p>
-            </button>
+            <div class="buttons-container">
+                <button @click="getMoreBest()" class="best-footer covering">
+                    <img class="more-icon" :src="MoreIcon" :alt="'Показать ещё - иконка'" />
+                    <p>Показать ещё</p>
+                </button>
+                <button v-show="hidingBestVisible" @click="getLessBest()" class="best-footer covering">
+                    <img class="more-icon reversed" :src="MoreIcon" :alt="'Скрыть - иконка'" />
+                    <p>Скрыть</p>
+                </button>
+            </div>
         </div>
         <div>
             <p class="covering">Популярные подборки</p>
@@ -48,7 +54,8 @@ export default defineComponent({
                 notificationsRequired: true
             },
             MoreIcon: MoreIcon,
-            productStore: useProductStore()
+            productStore: useProductStore(),
+            hidingBestVisible: false
         }
     },
     async created() {
@@ -69,7 +76,7 @@ export default defineComponent({
         }
     },
     methods: {
-        getMoreBest() : void {
+        getMoreBest(): void {
             const root = document.querySelector(".best-catalog") as HTMLElement;
             if (!root) return;
         
@@ -77,6 +84,14 @@ export default defineComponent({
             const nextValue = parseInt(currentValue, 10) + 2;
         
             root.style.setProperty("--counter-similar-rows", nextValue.toString());
+            this.hidingBestVisible = true;
+        },
+        getLessBest(): void {
+            const root = document.querySelector(".best-catalog") as HTMLElement;
+            if (!root) return;
+
+            root.style.setProperty("--counter-similar-rows", "2");
+            this.hidingBestVisible = false;
         }
     }
 });
@@ -141,17 +156,22 @@ $block-covering-height: 40px;
     z-index: 2;
 }
 .daily::after {
-  content: "";
-  position: absolute;
-  top: -30%;
-  left: -30%;
-  width: 160%;
-  height: 160%;
-  background: radial-gradient(circle at center, rgba(255, 215, 100, 0.05), transparent 70%);
-  z-index: 1;
+    content: "";
+    position: absolute;
+    top: -30%;
+    left: -30%;
+    width: 160%;
+    height: 160%;
+    background: radial-gradient(circle at center, rgba(255, 215, 100, 0.05), transparent 70%);
+    z-index: 1;
 }
 .best-wrapper {
     max-width: 100%;
+}
+.buttons-container {
+    margin: 0 10px;
+    display: flex;
+    gap: 10px;
 }
 .best-footer {
     width: 100%;
@@ -164,6 +184,7 @@ $block-covering-height: 40px;
     --catalog-max-height: calc((var(--card-height) + var(--gap-y)) * var(--counter-similar-rows));
     --gap-y: 20px;
     --card-height: 21vh;
+
     max-height: var(--catalog-max-height);
     margin: 10px 0;
     display: grid;
@@ -175,9 +196,14 @@ $block-covering-height: 40px;
     grid-template-rows: repeat(var(--counter-similar-rows), 21vh);
     overflow: hidden;
     margin-bottom: 0;
+
+    transition: max-height 0.5s ease-in-out, grid-template-rows 0.5s ease-in-out;
 }
 .more-icon {
     width: 20px;
+}
+.reversed {
+    transform: rotate(180deg);
 }
 .best-product {
     margin: 0;  
