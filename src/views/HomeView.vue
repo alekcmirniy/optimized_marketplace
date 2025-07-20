@@ -101,6 +101,7 @@ export default defineComponent({
 <style scoped lang="scss">
 @use '/src/assets/variables' as vars;
 $block-covering-height: 40px;
+
 .covering {
     min-height: $block-covering-height;
     &:not(.daily-product-label) {

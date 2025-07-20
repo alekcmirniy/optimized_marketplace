@@ -3,4 +3,16 @@ function closeByButton(event: KeyboardEvent, emit: (event: string, ...args: Arra
     if (event.key === "Escape")
         emit("close");
 }
-export { closeByButton };
+
+function getFormattedPrice(price: number) : string {   
+    let outPrice = price.toString().split("").reverse();
+    let formatted = [];
+    for (let i = 0; i < outPrice.length; i++) {
+        if (i > 0 && i % 3 === 0) {
+            formatted.push(",");
+        }
+        formatted.push(outPrice[i]);
+    }
+    return formatted.reverse().join("");
+}
+export { closeByButton, getFormattedPrice };

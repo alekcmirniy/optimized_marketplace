@@ -4,6 +4,7 @@
             <img :src="Icon" class="filter-image"/>
             <p>&nbsp;Фильтр</p>
         </div>
+        <button @click="$emit('reset-filters')" v-if="activeFilter">Сброс</button>
         <div class="fast-filters">
             <p @click="setActiveFilter('popular')" :class="{ 'active-filter': activeFilter === 'popular'}">Лучшее</p>
             <p @click="setActiveFilter('new-ones-first')" :class="{ 'active-filter': activeFilter === 'new-ones-first'}">Новинки</p>
@@ -33,7 +34,8 @@ export default defineComponent ({
             const newFilter = this.activeFilter === filterType ? "" : filterType; 
             this.$emit('use-filters', newFilter);
         }
-    }
+    },
+    emits: ['filter-section-open', 'reset-filters', 'use-filters']
 });
 
 </script>
@@ -44,27 +46,28 @@ export default defineComponent ({
 .filter-wrapper {
     color: vars.$body-color;
     display: flex;
-    align-items: center;
+    align-items: stretch;
     max-width: 100%;
     justify-content: space-around;
     margin: 0 10px;
-}
-.filter-image {
-    max-width: 30px;
+    display: flex;
+    gap: 20px;
 }
 .photo-plus-filters {
-    padding: 10px;
+    width: 100%;
     justify-content: center;
-    min-height: 50px;
     display: flex;
     align-items: center;
-    border-radius: 15px;
+    border-radius: 20px;
     background: vars.$background-gradient;
+}
+.filter-image {
+    max-width: 25px;
 }
 .fast-filters {
     width: 100%;
     justify-content:flex-end;
-    gap: 10px;
+    gap: 5px;
     display: flex;
 }
 .fast-filters p {

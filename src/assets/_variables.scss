@@ -1,7 +1,6 @@
 @use "sass:color";
 $body-color: #121212;
 $card-color: #1E1E1E;
-$gray-text: #B0B0B0;
 $supporting-golden: rgba(216, 197, 118, 1);
 $supporting-golden-lighten: #F5DFA2;
 $block-covering-color: color.adjust($body-color, $lightness:10%);

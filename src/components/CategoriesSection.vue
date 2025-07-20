@@ -1,6 +1,7 @@
 <template>
-    <div @click="$emit('categories-section-open')" class="categories-wrapper">
-        <span class="categories">Категории: {{ currentCategories ? currentCategories : "Все"}}</span>
+    <div class="categories-wrapper">
+        <span @click="$emit('categories-section-open')" class="categories">Категории: {{ currentCategories ? currentCategories : "Все"}}</span>
+        <button @click="$emit('reset-categories')" v-if="currentCategories">Сброс</button>
     </div>
 </template>
 
@@ -11,9 +12,10 @@ export default defineComponent({
     name: "CategoriesSection",
     props: {
         currentCategories: {
-            type: String,
+            type: String
         }
-    }
+    },
+    emits: ['categories-section-open', 'reset-categories']
 });
 </script>
 
@@ -24,6 +26,8 @@ export default defineComponent({
     margin: 10px;
     margin-bottom: 20px;
     color: vars.$body-color;
+    display: flex;
+    gap: 10px;
 }
 .categories {
     width: 100%;

@@ -20,15 +20,12 @@ body {
 * {
     box-sizing: border-box;
 }
-body {
-  background: vars.$body-color;
-}
 a {
   text-decoration: none;
   color: inherit;
 }
 button {
-  font-family: "Fira Sans", sans-serif;
+  font-family: 'Playfair Display', sans-serif;
   background: vars.$background-gradient;
   border: none;
   border-radius: 10px;
@@ -46,6 +43,19 @@ button {
     transform: scale(0.97);
     background: vars.$background-gradient-active;
   }
+}
+::-webkit-scrollbar {
+  width: 10px;
+  background-color: vars.$supporting-golden;
+  border-radius: 20px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: vars.$block-covering-color;
+  border-radius: 20px;
+}
+::-webkit-scrollbar-thumb:hover {
+  cursor: pointer;
+  background-color: color.adjust(vars.$block-covering-color, $lightness: 10%);
 }
 
 .fira-sans-thin {

@@ -73,6 +73,7 @@ section {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-align: center;
 }
 .brand {
     font-style: italic;

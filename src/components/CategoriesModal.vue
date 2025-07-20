@@ -4,7 +4,7 @@
             <div class="modal-content" ref="modalRef">
                 <form>
                     <p class="types">Основные</p>
-                    <ul class="categories-list">
+                    <ul class="categories-list less-categories">
                         <li v-for="(mainCategory, idx) of mainCategories" :key="idx">
                             <label>
                                 <input type="checkbox" v-model="selectedOptions[0]" :value="mainCategory" name="mainCategory">{{ mainCategory }}
@@ -109,7 +109,11 @@ export default defineComponent({
     list-style-type: none;
     display: flex;
     flex-wrap: wrap;
-    overflow:scroll;
+    
+    &:not(.less-categories) {
+        overflow-y:scroll;
+    }
+    
     max-width: 100%;
     max-height: 33vh;
 }

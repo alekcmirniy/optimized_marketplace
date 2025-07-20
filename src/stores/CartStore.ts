@@ -1,20 +1,22 @@
 import { defineStore } from "pinia";
 import { useProductStore } from "./ProductStore";
-import { hydrate, watch } from "vue";
+import { watch } from "vue";
 
 export const useCartStore = defineStore("CartStore", {
     state: () => ({
         cartProductsStructure: new Map<number, number>(),     //Map<id, quantity>
+        checkedProducts: new Map<number, boolean>(),          //Map<id, true/false>
         fullPrice: 0
     }),
     
     actions: {
-        initCartStore() {
+        initCartStore(): void {
             watch(
                 () => useCartStore().$state,
                 (state) => {
                     const serializableState = {
                         cartProductsStructure: Array.from(state.cartProductsStructure.entries()),
+                        checkedProducts: Array.from(state.checkedProducts.entries()),
                         fullPrice: state.fullPrice
                     };
                     localStorage.setItem("cart", JSON.stringify(serializableState));
@@ -22,13 +24,14 @@ export const useCartStore = defineStore("CartStore", {
                 {deep: true}
             );
         },
-        hydrateFromStorage() {
+        hydrateFromStorage(): void {
             const saved = localStorage.getItem("cart");
             if (!saved) return;
 
             try {
                 const parsed = JSON.parse(saved);
                 this.cartProductsStructure = new Map(parsed.cartProductsStructure);
+                this.checkedProducts = new Map(parsed.checkedProducts);
                 this.fullPrice = parsed.fullPrice;
             }
             catch (e) {
@@ -46,6 +49,8 @@ export const useCartStore = defineStore("CartStore", {
             }
 
             this.cartProductsStructure.set(id, (this.cartProductsStructure.get(id) || 0) + 1);
+            if (!this.checkedProducts.has(id))
+                this.checkedProducts.set(id, true);
             this.recountFullPrice(id, "added");
         },
         removeFromCart(id: number): void {
@@ -60,12 +65,13 @@ export const useCartStore = defineStore("CartStore", {
             else {
                 this.cartProductsStructure.set(id, (this.cartProductsStructure.get(id) || 0) - 1);
             }
-
+            this.checkedProducts.delete(id);
             this.recountFullPrice(id, "deleted");
         },
         clearCart(): void {
             this.cartProductsStructure.clear();
-            if (this.cartProductsStructure.size) console.error("Ошибка очистки корзины!");
+            this.checkedProducts.clear();
+            if (this.cartProductsStructure.size || this.checkedProducts.size) console.error("Ошибка очистки корзины!");
             this.fullPrice = 0;
         },
         recountFullPrice(id: number, operation: string): void {
@@ -82,6 +88,9 @@ export const useCartStore = defineStore("CartStore", {
                 console.error("Неизвестная операция по пересчету суммы товаров в корзине!");
                 return;
             }
+        },
+        getCheckedState(id: number): boolean {
+            return this.checkedProducts.get(id) || false;
         }
     },
 

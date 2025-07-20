@@ -1,10 +1,13 @@
 <template>
-    <div class="cart-product-wrapper">
+    <div class="cart-product-wrapper" :class="{unchecked: !checked}">
+        <input type="checkbox" v-model="checked"/>
         <img class = "cart-product-image" :src="product?.imagePath" />
         <aside class="cart-product-description">
-            <p class="brand">{{ product.getCardDescription()[1] }}</p>
+            <div>
+                <p class="brand">{{ product.getCardDescription()[1] }}</p>
+            </div>
             <p class="category-model">{{ product.getCardDescription()[0] }}</p>
-            <p class="price">{{ product.getCardDescription()[2] }}</p>
+            <p class="price">{{ fullQuantity }} руб.</p>
             <div class="quantity-more-less">
                 <button @click="$emit('add-to-cart', product.id)" class="quantity-button">+</button>
                 <span class="quantity"> {{ quantity }}</span>                                      
@@ -17,6 +20,8 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
 import { Product } from '@/backend/database';
+import { getFormattedPrice } from '@/utils/reusable_functions';
+import { useCartStore } from '@/stores/CartStore';
 
 export default defineComponent({
     name: "CartProducts",
@@ -28,6 +33,25 @@ export default defineComponent({
         quantity: {
             type: Number,
             required: true
+        }
+    },
+    data() {
+        return {
+            cartStore: useCartStore()
+        }
+    },
+    computed: {
+        fullQuantity(): string {
+            return getFormattedPrice(this.product.price * this.quantity);
+        },
+        checked: {
+            get(): boolean {
+                return this.cartStore.getCheckedState(this.product.id);
+            },
+            set(value: boolean): void {
+                this.cartStore.checkedProducts.set(this.product.id, value);
+                value ? this.cartStore.recountFullPrice(this.product.id, "added") : this.cartStore.recountFullPrice(this.product.id, "deleted");
+            }
         }
     }
 });
@@ -41,6 +65,11 @@ export default defineComponent({
     gap: 10px;
     background-color: color.adjust(vars.$body-color, $lightness:10%);
     border-radius: 20px;
+    position: relative;
+    transition: opacity 0.1s ease;
+}
+.unchecked {
+    opacity: 0.65;
 }
 .cart-product-image {
     max-width: 35%;
@@ -55,12 +84,29 @@ export default defineComponent({
 }
 .cart-product-description p {
     &:not(.quantity) {
-        margin-top: 5px;
+        margin-top: 8px;
     }
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+input[type=checkbox] {
+    position: absolute;
+    right: 2%;
+    top: 5%;
+    appearance: none;
+    height: 20px;
+    width: 20px;
+    border: solid 1px vars.$body-color;
+    border-radius: 2px;
+    box-shadow: 1px 1px 5px rgb(0 0 0 / 0.2);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    &:checked {
+        background-image: url('../components/icons/checkedIcon.png');
+    }
 }
 .brand {
     color: rgba(0,0,0,0.8);
@@ -71,6 +117,8 @@ export default defineComponent({
     font-weight: 800;
     letter-spacing: 1px;
     font-size: 24px;
+    justify-self: flex-end;
+    padding-right: 3ch;
 }
 .quantity-more-less {
     margin-top: 10px;

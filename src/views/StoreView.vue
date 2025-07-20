@@ -2,12 +2,25 @@
     <div class="wrapper">
         <MainHeader :header="headerData" />
 
-        <CategoriesSection :currentCategories="currentCategories" @categories-section-open="openCategoriesSection"/>
+        <CategoriesSection :currentCategories="currentCategories" 
+        @categories-section-open="openCategoriesSection" 
+        @reset-categories="useModal('categories')"/>
+
         <CategoriesModal v-if="categoriesIsOpen" @close="categoriesIsOpen = false" @use-categories="useCategories"/>
         
-        <FilterSection @use-filters="useFilters" :activeFilter="productStore.currentFilter" @filter-section-open="openFilterSection" />
+        <FilterSection :activeFilter="productStore.currentFilter" 
+        @use-filters="useFilters"
+        @filter-section-open="openFilterSection" 
+        @reset-filters="useModal('filters')"/>
+
         <FilterModal v-if="filtersIsOpen" @close="filtersIsOpen = false" @use-filters="useFilters"/>
         
+        <QuestionModal @close="changeQuestionModalVisibility"
+        @confirm-reset-categories="confirmResetCategories"
+        @confirm-reset-filters="confirmResetFilters"
+        @cancel="cancelReset"
+        v-if="questionModal.visible" :content="questionModal.content"/>
+
         <ul class="card-catalog">
             <li v-for="product of tempDatabase" :key="product.id">
                 <ProductCard :productId="product.id" :cardDescription="product.getCardDescription()" :imagePath="product.imagePath"/>
@@ -26,10 +39,11 @@ import CategoriesModal from '@/components/CategoriesModal.vue';
 import { defineComponent } from 'vue';
 import { useProductStore } from '@/stores/ProductStore';
 import { Product } from '@/backend/database';
+import QuestionModal from '@/components/QuestionModal.vue';
 
 export default defineComponent({
     name: "StoreView",
-    components: { MainHeader, ProductCard, CategoriesSection, FilterSection, FilterModal, CategoriesModal},
+    components: { MainHeader, ProductCard, CategoriesSection, FilterSection, FilterModal, CategoriesModal, QuestionModal},
     data() {
         return {
             headerData: {
@@ -40,7 +54,11 @@ export default defineComponent({
 
             filtersIsOpen: false,
             categoriesIsOpen: false,
-            productStore: useProductStore()
+            productStore: useProductStore(),
+            questionModal: {
+                visible: false,
+                content: ""
+            }
         }
     },
     computed: {
@@ -55,17 +73,39 @@ export default defineComponent({
         openFilterSection(): void {
             this.filtersIsOpen = true;
         },
-        openCategoriesSection() {
+        openCategoriesSection(): void {
             this.categoriesIsOpen = true;
         },
-        async useFilters(selectedOption: string): Promise<void> {
+        async useFilters(selectedFilter: string): Promise<void> {
             this.filtersIsOpen = false;
-            await this.productStore.applyFilters(selectedOption, this.productStore.currentCategories);
+            await this.productStore.applyFilters(selectedFilter, this.productStore.currentCategories);
         },
-        async useCategories(selectedOptions: Array<Array<string>>): Promise<void> {
+        async useCategories(selectedCategories: Array<Array<string>>): Promise<void> {
             this.categoriesIsOpen = false;
-            await this.productStore.applyFilters(this.productStore.currentFilter, selectedOptions);
+            await this.productStore.applyFilters(this.productStore.currentFilter, selectedCategories);
         },
+        changeQuestionModalVisibility(): void {
+            this.questionModal.visible = !this.questionModal.visible;
+        },
+        cancelReset(): void {
+            this.changeQuestionModalVisibility();
+            this.questionModal.content = "";
+        },
+        confirmResetCategories(): void {
+            this.useCategories([[],[]]);
+            this.changeQuestionModalVisibility();
+        },
+        confirmResetFilters(): void {
+            this.useFilters('');
+            this.changeQuestionModalVisibility();
+        },
+        useModal(value: string): void {
+            if (value === 'categories')
+                this.questionModal.content = "resetCategories";
+            else if (value === 'filters')
+                this.questionModal.content = "resetFilters";
+            this.changeQuestionModalVisibility();
+        }
     }
 });
 </script>

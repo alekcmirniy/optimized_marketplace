@@ -4,8 +4,8 @@
             <div class="modal-content" ref="modalRef">
             {{ modalPrompt }}
                 <div class="btns">
-                    <button @click="$emit('clear-cart')" class="cart-modal-btn">Да</button>
-                    <button @click="$emit('cancel')" class="cart-modal-btn">Отмена</button>
+                    <button v-if="action" @click="$emit(action)">Да</button>
+                    <button @click="$emit('cancel')">Отмена</button>
                 </div>
             </div>
         </div>
@@ -17,12 +17,17 @@ import { closeByButton } from '@/utils/reusable_functions';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-    name: "CartModal",
+    name: "QuestionModal",
     props: {
         content: {
             type: String,
             required: true,
             default: ""
+        },
+    },
+    data() {
+        return {
+            controller: null as AbortController | null
         }
     },
     computed: {
@@ -30,9 +35,23 @@ export default defineComponent({
             let message = "";
             if (this.content === 'clear')
                 message = "Вы действительно хотите очистить корзину?"
-            else if (this.content === 'deleteProduct')
+            else if (this.content === 'deleteLastProduct')
                 message = "Удалить последний экземпляр товара из корзины?"
+            else if (this.content === 'resetCategories')
+                message = "Сбросить категории?"
+            else if (this.content === 'resetFilters')
+                message = "Сбросить фильтры?"
             return message;
+        },
+        action() {
+            if (this.content === 'clear') 
+                return 'confirm-clear';
+            else if (this.content === 'deleteLastProduct')
+                return 'delete-last-product';
+            else if (this.content === 'resetCategories')
+                return 'confirm-reset-categories';
+            else if (this.content === 'resetFilters')
+                return 'confirm-reset-filters';
         }
     },
     methods: {
@@ -45,17 +64,22 @@ export default defineComponent({
                 this.$emit('close');
         }
     },
-    emits: ['close', 'clear-cart', 'cancel'],
+    emits: ['close', 'confirm-clear', 'delete-last-product', 'confirm-reset-categories', 'confirm-reset-filters', 'cancel'],
     mounted() {
         setTimeout(() => {
-            document.addEventListener("click", this.closeModal);
-            document.addEventListener("keydown", this.handleKeyDown);
+            this.controller = new AbortController();
+            document.addEventListener("click", this.closeModal, { signal: this.controller.signal });
+            document.addEventListener("keydown", this.handleKeyDown, {signal: this.controller.signal });
             document.body.style.setProperty('overflow-y','hidden');
         }, 0);
     },
     unmounted() {
-        document.removeEventListener("click", this.closeModal);
-        document.removeEventListener("keydown", this.handleKeyDown);
+        if (this.controller)
+            this.controller.abort();
+        else {
+            document.removeEventListener("click", this.closeModal);
+            document.removeEventListener("keydown", this.handleKeyDown);
+        }
         document.body.style.removeProperty('overflow-y');
     }
 })

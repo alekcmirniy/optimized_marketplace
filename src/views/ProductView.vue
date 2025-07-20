@@ -7,7 +7,7 @@
                 <p class="model">{{ product.categories.mainCategory }}</p>
                 <p class="model">{{ product.model }}</p>
             </div>
-            <p class="price">{{ product.getFormattedPrice() }} руб.</p>
+            <p class="price">{{ getFormattedPrice(product.price) }} руб.</p>
             <div class="rating-container">
                 <img class="rating-icon" :src="RatingIcon" /> 
                 <p class="rating">Рейтинг: {{ product.rating }}</p>
@@ -23,6 +23,7 @@
 </template>
 
 <script lang="ts">
+import { getFormattedPrice } from '@/utils/reusable_functions';
 import { defineComponent } from 'vue';
 import { useProductStore } from '@/stores/ProductStore';
 import { useCartStore } from '@/stores/CartStore';
@@ -43,6 +44,11 @@ export default defineComponent({
             RatingIcon: RatingIcon,
             productStore: useProductStore(),
             cartStore: useCartStore()
+        }
+    },
+    computed: {
+        getFormattedPrice(): Function {
+            return getFormattedPrice;
         }
     },
     methods: {

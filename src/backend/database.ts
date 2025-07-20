@@ -1,5 +1,6 @@
 import Icon from "@/backend/productPhotos/Shoe1.png"
 import BagIcon from "@/backend/productPhotos/bag.png"
+import { getFormattedPrice } from "@/utils/reusable_functions";
 class Product {
     constructor(
         private readonly _id: number,
@@ -23,19 +24,9 @@ class Product {
         this._visitsNumber = _visitsNumber;
     }
     public getCardDescription() :Array<string> {
-        return [`${this._categories.mainCategory} ${this.model}`, `${this.brand}`, `${this.getFormattedPrice()} руб.`];
+        return [`${this._categories.mainCategory} ${this.model}`, `${this.brand}`, `${getFormattedPrice(this.price)} руб.`];
     }
-    public getFormattedPrice() : string {   
-        let outPrice = this.price.toString().split("").reverse();
-        let formatted = [];
-        for (let i = 0; i < outPrice.length; i++) {
-            if (i > 0 && i % 3 === 0) {
-                formatted.push(",");
-            }
-            formatted.push(outPrice[i]);
-        }
-        return formatted.reverse().join("");
-    }
+
     public get model(): string {
         return this._model;
     }

@@ -3,18 +3,22 @@
         <MainHeader :header="headerData"/>
         <div>
             <div class="total-price">
-                <p>Общая сумма корзины: {{ totalPrice }} руб.</p>
+                <p>Сумма к покупке: {{ totalPrice }} руб.</p>
                 <div class="buttons">
                     <button @click="useModal('clear')" class="cart-button" :disabled="isCartEmpty">Очистить</button>
                     <button class="cart-button" :disabled="isCartEmpty">Перейти к оформлению</button>
                 </div>
             </div>
-            <CartModal @close="changeModalVisibility" @clear-cart="confirmClear" @cancel="dismissClear" v-if="modal.visible" :content="modal.content"/>
+            <QuestionModal @close="changeModalVisibility"
+            @confirm-clear="confirmClear"
+            @delete-last-product="deleteLastProduct"
+            @cancel="cancelClear"
+            v-if="modal.visible" :content="modal.content"/>
             <transition-group name="cart" tag="ul" class="products-list">
                 <li v-for="product of cartProducts.getProductsFromCart" :key="product.id">
                     <CartProduct :product="product as Product" 
-                    :quantity="getProductQuantity(product.id)" 
-                    @remove-from-cart="cartProducts.removeFromCart"
+                    :quantity="getProductQuantity(product.id)"
+                    @remove-from-cart="removeLastProductTask(product.id)"
                     @add-to-cart="cartProducts.addToCart"/>
                 </li>
             </transition-group>
@@ -24,14 +28,14 @@
 
 <script lang="ts">
 import type { Product } from "@/backend/database";
-import CartModal from "@/components/CartModal.vue";
 import CartProduct from "@/components/CartProduct.vue";
 import MainHeader from "@/components/MainHeader.vue";
 import { useCartStore } from "@/stores/CartStore";
+import QuestionModal from "@/components/QuestionModal.vue";
 
 export default {
     name: "CartView",
-    components: { MainHeader, CartProduct, CartModal },
+    components: { MainHeader, CartProduct, QuestionModal },
     data() {
         return {
             headerData: {
@@ -43,7 +47,8 @@ export default {
             modal: {
                 visible: false,
                 content: ""
-            }
+            },
+            tempIdForDeleting: 0
         }
     },
     computed: {
@@ -61,11 +66,12 @@ export default {
         changeModalVisibility(): void {
             this.modal.visible = !this.modal.visible;
         },
-        useModal(content: string): void {
+        useModal(content: string, idForDeleting?: number): void {
             this.modal.content = content;
             this.changeModalVisibility();
+            this.tempIdForDeleting = idForDeleting || 0;
         },
-        dismissClear(): void {
+        cancelClear(): void {
             this.changeModalVisibility();
             this.modal.content = "";
         },
@@ -80,6 +86,20 @@ export default {
             finally {
                 this.modal.content = "";
             }
+        },
+        removeLastProductTask(id: number): void {
+            const quantity = this.getProductQuantity(id);
+            if (quantity === 1) {
+                this.useModal('deleteLastProduct', id);
+            }
+            else
+                this.cartProducts.removeFromCart(id);
+        },
+        deleteLastProduct(): void {
+            const id = this.tempIdForDeleting;
+            this.cartProducts.removeFromCart(id);
+            this.changeModalVisibility();
+            this.tempIdForDeleting = 0;
         }
     }
 }
