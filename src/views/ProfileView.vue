@@ -4,11 +4,18 @@
         <p>Иконка профиля и данные</p>
         <p>Место для своих заказов</p>
         <p>Слайдер подборки персональных интересов</p>
+        <div v-if="productStore.isLoading">Загрузка...</div>
+        <div v-else-if="productStore.error">Ошибка: {{ productStore.error }}</div>
+        <template v-else> 
+            <div> {{ productStore.productsCount }} </div>
+            <div> {{ productStore.products }} </div>
+        </template>
     </div>
 </template>
 
 <script lang="ts">
 import MainHeader from '@/components/MainHeader.vue';
+import { useProductStore } from '@/stores/ProductStore';
 
 export default {
     name: "ProfileView",
@@ -19,8 +26,12 @@ export default {
                 headerText: "Профиль",
                 searchRequired: false,
                 notificationsRequired: true
-            }
+            },
+            productStore: useProductStore()
         }
+    },
+    mounted() {
+        this.productStore.fetchProducts();
     }
 }
 

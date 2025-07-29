@@ -2,10 +2,20 @@ import { defineStore } from "pinia";
 import { productDatabase, Product, type Slide, dailyProduct, bestSlidesData, dailySlidesData, sortCatalogBy, applyFiltersAndCategories } from "@/backend/database";
 import axios from "axios";
 
+import type { ProductType } from '@/types/Product.ts';
+
+interface ApiResponse {
+    count: number,
+    next: string,
+    previous: string,
+    results: Array<ProductType>
+}
+
 export const useProductStore = defineStore("ProductStore", {
     state: () => ({
         //api products
-        products: [] as Array<any>,         //потом заменим на интерфейс Product[]
+        products: [] as Array<ProductType>,        //потом заменим на интерфейс Product[]
+        productsCount: 0,
         isLoading: false,
         error: null as string | null,
 
@@ -25,8 +35,12 @@ export const useProductStore = defineStore("ProductStore", {
             this.isLoading = true;
             this.error = null;
             try {
-                const res = await axios.get('http://localhost:8000/api/products/');
-                this.products = res.data;
+                const res = await axios.get<ApiResponse>('/api/products/');
+                if (res.status === 200) {
+                    this.products = res.data.results;
+                    this.productsCount = res.data.count;
+                }
+                else throw new Error("Некорректный ответ с сервера");
             }
             catch (error: any) {
                 this.error = error.message || 'Ошибка загрузки товара';
