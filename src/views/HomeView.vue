@@ -3,7 +3,9 @@
         <MainHeader :header="headerData" />
         <div>
             <p class="covering">Подборки дня</p>
-            <CompilationSlider :slides="dailySlidesData" />
+            <router-link to="/store">
+                <CompilationSlider :slides="dailySlidesData" />
+            </router-link>
         </div>
         <div class="daily">
             <label class="daily-product-label covering">Товар дня</label>
@@ -29,7 +31,9 @@
         </div>
         <div>
             <p class="covering">Популярные подборки</p>
-            <CompilationSlider :slides="bestSlidesData" />
+            <router-link to="/store">
+                <CompilationSlider :slides="bestSlidesData" />
+            </router-link>
         </div>
     </div>
 </template>

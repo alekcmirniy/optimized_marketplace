@@ -1,8 +1,14 @@
 import { defineStore } from "pinia";
 import { productDatabase, Product, type Slide, dailyProduct, bestSlidesData, dailySlidesData, sortCatalogBy, applyFiltersAndCategories } from "@/backend/database";
+import axios from "axios";
 
 export const useProductStore = defineStore("ProductStore", {
     state: () => ({
+        //api products
+        products: [] as Array<any>,         //потом заменим на интерфейс Product[]
+        isLoading: false,
+        error: null as string | null,
+
         productsStructure: new Map<number, Product>(),
         dailyProduct: dailyProduct as Product,
         bestSlides: bestSlidesData as Array<Slide>,
@@ -13,6 +19,23 @@ export const useProductStore = defineStore("ProductStore", {
     }),
 
     actions: {
+
+        //api
+        async fetchProducts() {
+            this.isLoading = true;
+            this.error = null;
+            try {
+                const res = await axios.get('http://localhost:8000/api/products/');
+                this.products = res.data;
+            }
+            catch (error: any) {
+                this.error = error.message || 'Ошибка загрузки товара';
+            }
+            finally {
+                this.isLoading = false;
+            }
+        },
+
         async initializeProductStructure() :Promise<void> {
             this.productsStructure = new Map(productDatabase.map((prod) => [prod.id, prod]));
         },
