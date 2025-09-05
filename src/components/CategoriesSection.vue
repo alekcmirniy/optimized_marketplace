@@ -15,7 +15,7 @@ export default defineComponent({
             type: String
         }
     },
-    emits: ['categories-section-open', 'reset-categories']
+    emits: ["categories-section-open", "reset-categories"]
 });
 </script>
 

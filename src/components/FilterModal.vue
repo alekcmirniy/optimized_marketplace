@@ -1,14 +1,15 @@
 <template>
-    <teleport to='body'>
+    <teleport to="body">
         <div class="modal-wrapper">
             <div class="modal-content" ref="modalRef">
                 <form>
-                    <label><input type="radio" value="ascending-price" v-model="selectedOption" name="filter"/>По возрастанию цены</label>
-                    <label><input type="radio" value="descending-price" v-model="selectedOption" name="filter" />По убыванию цены</label>
-                    <label><input type="radio" value="new-ones-first" v-model="selectedOption" name="filter"/>Сначала новые</label>
-                    <label><input type="radio" value="best-rating" v-model="selectedOption" name="filter"/>Высокий рейтинг</label>
-                    <label><input type="radio" value="popular" v-model="selectedOption" name="filter"/>Популярные</label>
+                    <label><input type="radio" value="price" v-model="selectedOption" name="filter"/>По возрастанию цены</label>
+                    <label><input type="radio" value="-price" v-model="selectedOption" name="filter" />По убыванию цены</label>
+                    <label><input type="radio" value="created_at" v-model="selectedOption" name="filter"/>Сначала новые</label>
+                    <label><input type="radio" value="-rating" v-model="selectedOption" name="filter"/>Высокий рейтинг</label>
+                    <label><input type="radio" value="-views" v-model="selectedOption" name="filter"/>Популярные</label>
                 </form>
+                <!--   const allowed = ['price', '-price', 'created_at', '-rating', '-views'];   -->
                 <button @click="$emit('use-filters', selectedOption)" :disabled="!selectedOption" class="modal-button">Применить</button>
             </div>
         </div>
@@ -16,13 +17,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { closeByButton } from '@/utils/reusable_functions';
+import { defineComponent } from "vue";
+import { closeByButton } from "@/utils/reusable_functions";
+
 export default defineComponent({
     name: "FilterModal",
     data() {
         return {
-            selectedOption: "" as string
+            selectedOption: ""
         }
     },
     methods: {
@@ -35,18 +37,18 @@ export default defineComponent({
             closeByButton(event, this.$emit as (event: string, ...args: any[]) => void);
         }
     },
-    emits: ['use-filters', 'close'],
+    emits: ["use-filters", "close"],
     mounted() {
         setTimeout(() => {
             document.addEventListener("click", this.closeModal);
             document.addEventListener("keydown", this.handleKeyDown);
-            document.body.style.setProperty('overflow-y', 'hidden');
+            document.body.style.setProperty("overflow-y", "hidden");
         }, 0);
     },
     unmounted() {
         document.removeEventListener("click", this.closeModal);
         document.removeEventListener("keydown", this.handleKeyDown);
-        document.body.style.removeProperty('overflow-y');
+        document.body.style.removeProperty("overflow-y");
     }
 });
 </script>

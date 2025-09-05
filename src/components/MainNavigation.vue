@@ -9,7 +9,7 @@
                 aria-current="page"
                 >
                 {{ link.label }}
-                <img :src="link.icon" class="nav-icon" />
+                <img :src="link.src" :alt="link.alt" class="nav-icon" />
                 </router-link>
             </li>
         </ul>
@@ -28,10 +28,10 @@ export default defineComponent({
     data() {
         return {
             links: [
-                {name: "home", path: "/", icon: HomeIcon, label: "Главная"},
-                {name: "store", path: "/store", icon: StoreIcon, label: "Каталог"},
-                {name: "cart", path: "/cart", icon: CartIcon, label: "Корзина"},
-                {name: "profile", path: "/profile", icon: ProfileIcon, label: "Профиль"}
+                {name: "home", path: "/", src: HomeIcon, alt: 'Главная - иконка', label: "Главная"},
+                {name: "store", path: "/store", src: StoreIcon, alt: 'Каталог - иконка', label: "Каталог"},
+                {name: "cart", path: "/cart", src: CartIcon, alt: 'Корзина - иконка', label: "Корзина"},
+                {name: "profile", path: "/profile", src: ProfileIcon, alt: 'Профиль - иконка', label: "Профиль"}
             ]
         }
     }
@@ -57,6 +57,7 @@ $nav-bar-color: vars.$supporting-golden-lighten;
     outline: solid 1px black;
     z-index: 1000;
     backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     background: rgba(20, 20, 20, 0.6);
 }
 .nav-item {
@@ -74,11 +75,13 @@ $nav-bar-color: vars.$supporting-golden-lighten;
     text-decoration: none;
     display: flex;
     flex-direction: column;
+    -ms-flex-direction: column;
     letter-spacing: 1px;
     align-items: center;
     transition: 0.15s;
     padding: 0;
     flex-grow: 0.5;
+    -ms-flex-positive: 0.5;
     background: vars.$background-gradient;
     border-radius: 10px;
     opacity: 0.75;

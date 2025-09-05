@@ -1,5 +1,5 @@
 <template>
-    <teleport to='body'>
+    <teleport to="body">
         <div class="modal-wrapper">
             <div class="modal-content" ref="modalRef">
             {{ modalPrompt }}
@@ -13,8 +13,8 @@
 </template>
 
 <script lang="ts">
-import { closeByButton } from '@/utils/reusable_functions';
-import { defineComponent } from 'vue';
+import { closeByButton } from "@/utils/reusable_functions";
+import { defineComponent } from "vue";
 
 export default defineComponent({
     name: "QuestionModal",
@@ -61,16 +61,16 @@ export default defineComponent({
         closeModal(event: Event): void {
             const modal = this.$refs.modalRef as HTMLElement || undefined;
             if (modal && !modal.contains(event.target as Node)) 
-                this.$emit('close');
+                this.$emit("close");
         }
     },
-    emits: ['close', 'confirm-clear', 'delete-last-product', 'confirm-reset-categories', 'confirm-reset-filters', 'cancel'],
+    emits: ["close", "confirm-clear", "delete-last-product", "confirm-reset-categories", "confirm-reset-filters", "cancel"],
     mounted() {
         setTimeout(() => {
             this.controller = new AbortController();
             document.addEventListener("click", this.closeModal, { signal: this.controller.signal });
             document.addEventListener("keydown", this.handleKeyDown, {signal: this.controller.signal });
-            document.body.style.setProperty('overflow-y','hidden');
+            document.body.style.setProperty("overflow-y", "hidden");
         }, 0);
     },
     unmounted() {
@@ -80,7 +80,7 @@ export default defineComponent({
             document.removeEventListener("click", this.closeModal);
             document.removeEventListener("keydown", this.handleKeyDown);
         }
-        document.body.style.removeProperty('overflow-y');
+        document.body.style.removeProperty("overflow-y");
     }
 })
 

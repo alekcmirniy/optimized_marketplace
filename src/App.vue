@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="application">
     <header>
       <MainNavigation />
     </header>
@@ -25,11 +25,11 @@ export default defineComponent({
       cartStore: useCartStore()
     }
   },
-  created() {
-    this.productStore.initializeProductStructure();
+  async created() {
     this.cartStore.hydrateFromStorage();
     this.cartStore.initCartStore();
-  },
+    await this.productStore.init();
+  }
 });
 
 

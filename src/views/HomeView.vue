@@ -4,18 +4,18 @@
         <div>
             <p class="covering">Подборки дня</p>
             <router-link to="/store">
-                <CompilationSlider :slides="dailySlidesData" />
+                <CompilationSlider v-if="mainSlides?.length" :slides="mainSlides" />
             </router-link>
         </div>
         <div class="daily">
             <label class="daily-product-label covering">Товар дня</label>
-            <ProductCard class="daily-product" :productId="dailyProduct.id" :cardDescription="dailyProduct.getCardDescription()" :imagePath="dailyProduct.imagePath"/>
+            <ProductCard v-if="dailyProduct" class="daily-product" :product="dailyProduct"/>
         </div>
         <p class="covering">Лучшие товары</p>
         <div class="best-wrapper">
             <ul class="best-catalog">
-                <li v-for="product of bestRating" :key="product.id">
-                    <ProductCard class="best-product" :productId="product.id" :cardDescription="product.getCardDescription()" :imagePath="product.imagePath"/>
+                <li v-for="(product, index) of bestRating" :key="index">
+                    <ProductCard class="best-product" :product="product"/>
                 </li>
             </ul>
             <div class="buttons-container">
@@ -32,7 +32,7 @@
         <div>
             <p class="covering">Популярные подборки</p>
             <router-link to="/store">
-                <CompilationSlider :slides="bestSlidesData" />
+                <CompilationSlider v-if="categoriesSlides?.length" :slides="categoriesSlides" />
             </router-link>
         </div>
     </div>
@@ -44,8 +44,9 @@ import MainHeader from '@/components/MainHeader.vue';
 import ProductCard from '@/components/ProductCard.vue';
 import CompilationSlider from '@/components/CompilationSlider.vue';
 import { useProductStore } from '@/stores/ProductStore';
-import { type Slide, Product } from '@/backend/database';
+import { type Slide } from '@/utils/slides';
 import { defineComponent } from 'vue';
+import type { ProductType } from '@/types/interfaces';
 
 export default defineComponent({
     name: "HomeView",
@@ -62,25 +63,44 @@ export default defineComponent({
             hidingBestVisible: false
         }
     },
-    async created() {
-        await this.productStore.loadBestRating();
+    async created(): Promise<void> {
+        if (!this.dailyProduct || !this.productStore.dailyProduct) {
+            await this.productStore.initDailyProduct();
+        }
+        if (!this.productStore.homeBest.products.length) {
+            await this.productStore.fetchHomeProducts();
+        }
+
+        if (!this.mainSlides.length || !this.categoriesSlides.length) {
+            await this.productStore.init();
+        }
+    },
+    unmounted() {
+        this.productStore.homeBest = { products: [], nextPage: null };
     },
     computed: {
-        bestRating(): Array<Product> {
-            return this.productStore.allProducts as Array<Product>;
+        bestRating(): Array<ProductType> {
+            return this.productStore.homeBest.products;
         },
-        dailyProduct(): Product {
-            return this.productStore.dailyProduct as Product;
+        nextPage(): string | null {
+            return this.productStore.homeBest.nextPage;
         },
-        bestSlidesData(): Array<Slide> {
-            return this.productStore.bestSlides;
+        dailyProduct(): ProductType {
+            return this.productStore.dailyProduct as ProductType;
         },
-        dailySlidesData(): Array<Slide> {
-            return this.productStore.dailySlides;
+        mainSlides(): Array<Slide> {
+            const slidesObject = Object.values(this.productStore.mainSlides);
+            const slidesArray = Array.from(slidesObject);
+            return slidesArray.filter(slide => slide.src);
+        },
+        categoriesSlides(): Array<Slide> {
+            const slidesObject = Object.values(this.productStore.categoriesSlides);
+            const slidesArray = Array.from(slidesObject);
+            return slidesArray.filter(slide => slide.src);
         }
     },
     methods: {
-        getMoreBest(): void {
+        async getMoreBest(): Promise<void> {
             const root = document.querySelector(".best-catalog") as HTMLElement;
             if (!root) return;
         
@@ -89,13 +109,18 @@ export default defineComponent({
         
             root.style.setProperty("--counter-similar-rows", nextValue.toString());
             this.hidingBestVisible = true;
+
+            if (this.productStore.homeBest.nextPage)
+                await this.productStore.fetchHomeProducts(this.productStore.homeBest.nextPage);
         },
-        getLessBest(): void {
+        async getLessBest(): Promise<void> {
             const root = document.querySelector(".best-catalog") as HTMLElement;
             if (!root) return;
 
             root.style.setProperty("--counter-similar-rows", "2");
             this.hidingBestVisible = false;
+
+            await this.productStore.fetchHomeProducts();
         }
     }
 });
@@ -193,6 +218,7 @@ $block-covering-height: 40px;
     max-height: var(--catalog-max-height);
     margin: 10px 0;
     display: grid;
+    display: ms-grid;
     justify-content: center;
     gap: 20px 10px;
 

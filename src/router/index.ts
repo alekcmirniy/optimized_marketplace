@@ -8,30 +8,30 @@ import ProductView from "@/views/ProductView.vue";
 
 const routes = [
   {
-    path: '/',
+    path: "/",
     name: "home",
     component: HomeView
   },
   {
-    path: '/store',
+    path: "/store",
     name: "store",
     component: StoreView
   },
   {
-    path: '/cart',
+    path: "/cart",
     name: "cart",
     component: CartView
   },
   {
-    path: '/profile',
+    path: "/profile",
     name: "profile",
     component: ProfileView
   },
   {
-    path: '/product/:id',
-    name: "ProductView",
+    path: "/product/:slug",
+    name: "product",
     component: ProductView,
-    props: (route: RouteLocationNormalized) => ({id: Number(route.params.id)})
+    props: (route: RouteLocationNormalized) => ({slug: (route.params.slug)})
   }
 ];
 

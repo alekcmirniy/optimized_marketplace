@@ -10,6 +10,7 @@ html, body, h1, h2, h3, h4, h5, h6, p, main, div, span, a, footer, header, dd, d
     font-size: 100%;
     vertical-align: baseline;
 }
+
 body {
   font-family: 'Playfair Display', serif;
   font-optical-sizing: auto;
@@ -17,13 +18,16 @@ body {
   background: vars.$body-color;
   color: vars.$supporting-golden;
 }
+
 * {
     box-sizing: border-box;
 }
+
 a {
   text-decoration: none;
   color: inherit;
 }
+
 button {
   font-family: 'Playfair Display', sans-serif;
   background: vars.$background-gradient;
@@ -44,15 +48,18 @@ button {
     background: vars.$background-gradient-active;
   }
 }
+
 ::-webkit-scrollbar {
   width: 10px;
   background-color: vars.$supporting-golden;
   border-radius: 20px;
 }
+
 ::-webkit-scrollbar-thumb {
   background-color: vars.$block-covering-color;
   border-radius: 20px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   cursor: pointer;
   background-color: color.adjust(vars.$block-covering-color, $lightness: 10%);

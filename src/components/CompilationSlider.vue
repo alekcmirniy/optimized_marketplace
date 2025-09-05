@@ -1,13 +1,13 @@
 <template>
     <div class="slider-wrapper" aria-label="Галерея-подборок">
         <div>
-            <img class="slider-image" :src="slides[currentIndex].src" :alt="slides[currentIndex].alt" role="img" />
+            <img v-if="slides?.length" class="slider-image" :src="slides[currentIndex].src" :alt="slides[currentIndex].alt" role="img" />
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import type { Slide } from '@/backend/database';
+import type { Slide, CategoriesSliderType,MainSliderType } from "@/utils/slides";
 import { defineComponent } from 'vue';
 
 export default defineComponent({

@@ -1,33 +1,33 @@
 <template>
     <div class="cart-product-wrapper" :class="{unchecked: !checked}">
         <input type="checkbox" v-model="checked"/>
-        <img class = "cart-product-image" :src="product?.imagePath" />
+        <img class = "cart-product-image" :src="imageSource" :alt="'Изображение товара'" />
         <aside class="cart-product-description">
             <div>
-                <p class="brand">{{ product.getCardDescription()[1] }}</p>
+                <p class="brand">{{ product.brand }}</p>
             </div>
-            <p class="category-model">{{ product.getCardDescription()[0] }}</p>
+            <p>{{ product.type }}</p>
+            <p>{{ product.name }}</p>
             <p class="price">{{ fullQuantity }} руб.</p>
             <div class="quantity-more-less">
-                <button @click="$emit('add-to-cart', product.id)" class="quantity-button">+</button>
+                <button @click="$emit('add-to-cart', product.slug)" class="quantity-button">+</button>
                 <span class="quantity"> {{ quantity }}</span>                                      
-                <button @click="$emit('remove-from-cart', product.id)" class="quantity-button">-</button>
+                <button @click="$emit('remove-from-cart', product.slug)" class="quantity-button">-</button>
             </div>
         </aside>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, type PropType } from 'vue';
-import { Product } from '@/backend/database';
-import { getFormattedPrice } from '@/utils/reusable_functions';
-import { useCartStore } from '@/stores/CartStore';
+import { defineComponent, type PropType } from "vue";
+import { useCartStore } from "@/stores/CartStore";
+import type { ProductType } from "@/types/interfaces";
 
 export default defineComponent({
     name: "CartProducts",
     props: {
         product: {
-            type: Object as PropType<Product>,
+            type: Object as PropType<ProductType>,
             required: true
         },
         quantity: {
@@ -42,16 +42,40 @@ export default defineComponent({
     },
     computed: {
         fullQuantity(): string {
-            return getFormattedPrice(this.product.price * this.quantity);
+            return this.getFormattedPrice(Number(this.product.price) * this.quantity);
         },
         checked: {
             get(): boolean {
-                return this.cartStore.getCheckedState(this.product.id);
+                return this.cartStore.getCheckedState(this.product.slug);
             },
             set(value: boolean): void {
-                this.cartStore.checkedProducts.set(this.product.id, value);
-                value ? this.cartStore.recountFullPrice(this.product.id, "added") : this.cartStore.recountFullPrice(this.product.id, "deleted");
+                this.cartStore.checkedProducts.set(this.product.slug, value);
+                value ? this.cartStore.recountFullPrice(this.product.slug, "added") : this.cartStore.recountFullPrice(this.product.slug, "deleted");
             }
+        },
+        imageSource(): string {
+            if (this.product.images.length === 1)
+                return this.product.images[0].image;
+            else {
+                this.product.images.find((imgData) => {
+                    if (imgData.is_preview) return imgData.image;
+                })
+                console.error("Не найдено изображение is_preview товара!");
+                return "";
+            }
+        }
+    },
+    methods: {
+        getFormattedPrice(price: number) : string {   
+            let outPrice = price.toString().split("").reverse();
+            let formatted = [];
+            for (let i = 0; i < outPrice.length; i++) {
+                if (i > 0 && i % 3 === 0) {
+                    formatted.push(",");
+                }
+                formatted.push(outPrice[i]);
+            }
+            return formatted.reverse().join("");
         }
     }
 });
@@ -105,7 +129,7 @@ input[type=checkbox] {
     background-size: contain;
     background-position: center;
     &:checked {
-        background-image: url('../components/icons/checkedIcon.png');
+        background-image: url('../components/icons/CheckedIcon.png');
     }
 }
 .brand {

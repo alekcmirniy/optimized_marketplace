@@ -1,20 +1,19 @@
 <template>
     <div class="filter-wrapper">
         <div @click="$emit('filter-section-open')" class="photo-plus-filters">
-            <img :src="Icon" class="filter-image"/>
+            <img :src="Icon" class="filter-image" alt="Фильтр - иконка"/>
             <p>&nbsp;Фильтр</p>
         </div>
         <button @click="$emit('reset-filters')" v-if="activeFilter">Сброс</button>
         <div class="fast-filters">
-            <p @click="setActiveFilter('popular')" :class="{ 'active-filter': activeFilter === 'popular'}">Лучшее</p>
-            <p @click="setActiveFilter('new-ones-first')" :class="{ 'active-filter': activeFilter === 'new-ones-first'}">Новинки</p>
+            <p @click="setActiveFilter('-rating')" :class="{ 'active-filter': activeFilter === '-rating'}">Лучшее</p>
+            <p @click="setActiveFilter('created_at')" :class="{ 'active-filter': activeFilter === 'created_at'}">Новинки</p>
         </div>
     </div>
 </template>
-
 <script lang="ts">
-import FilterIcon from '@/components/icons/Filter.png';
-import { defineComponent } from 'vue';
+import FilterIcon from "@/components/icons/Filter.png";
+import { defineComponent } from "vue";
 
 export default defineComponent ({
     name: "FilterSection",
@@ -31,11 +30,14 @@ export default defineComponent ({
     },
     methods: {
         setActiveFilter(filterType: string): void {
-            const newFilter = this.activeFilter === filterType ? "" : filterType; 
-            this.$emit('use-filters', newFilter);
+            const newFilter = this.activeFilter === filterType ? "" : filterType;
+            if (this.activeFilter === filterType)
+                this.$emit("reset-filters");
+            else
+                this.$emit("use-filters", newFilter);
         }
     },
-    emits: ['filter-section-open', 'reset-filters', 'use-filters']
+    emits: ["filter-section-open", "reset-filters", "use-filters"]
 });
 
 </script>

@@ -7,8 +7,8 @@
             <p class="header-current-page">{{ header.headerText }}</p>
         </div>
         <aside class = "header-aside">
-            <img v-show="header.searchRequired" :src="iconPaths.SearchIcon" class="header-icons"/>
-            <img v-show="header.notificationsRequired" :src="iconPaths.NotificationsIcon" class="header-icons"/>
+            <img v-show="header.searchRequired" :src="iconPaths.SearchIcon" alt="Поиск - иконка" class="header-icons"/>
+            <img v-show="header.notificationsRequired" :src="iconPaths.NotificationsIcon" alt="Уведомления - иконка" class="header-icons"/>
         </aside>
     </div>
 </template>
@@ -42,11 +42,11 @@ export default defineComponent({
 @use '/src/assets/variables' as vars;
 @use "sass:color";
 .wrapper {
-    margin-top: 20px;
     display: flex;
     justify-content: space-between;
     padding: 0 5px;
     align-items: center;
+    margin: 20px 5px 0 5px;
 }
 .header-wrapper {
     width: 70%;
@@ -70,7 +70,6 @@ export default defineComponent({
     width: auto;
 }
 .header-current-page {
-    margin-left: 5px;
     font-size: 30px;
     font-weight: 500;
     color: vars.$supporting-golden;
@@ -78,7 +77,7 @@ export default defineComponent({
 }
 .header-aside {
     display: flex;
-    gap: 10px;
+    gap: 12px;
 }
 .header-icons {
     padding: 6px;

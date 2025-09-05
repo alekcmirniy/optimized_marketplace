@@ -15,11 +15,11 @@
             @cancel="cancelClear"
             v-if="modal.visible" :content="modal.content"/>
             <transition-group name="cart" tag="ul" class="products-list">
-                <li v-for="product of cartProducts.getProductsFromCart" :key="product.id">
-                    <CartProduct :product="product as Product" 
-                    :quantity="getProductQuantity(product.id)"
-                    @remove-from-cart="removeLastProductTask(product.id)"
-                    @add-to-cart="cartProducts.addToCart"/>
+                <li v-for="product of cartStore.getProductsFromCart" :key="product.slug">
+                    <CartProduct :product="product as ProductType" 
+                    :quantity="getProductQuantity(product.slug)"
+                    @remove-from-cart="removeLastProductTask(product.slug)"
+                    @add-to-cart="cartStore.addToCart(product.slug)"/>
                 </li>
             </transition-group>
         </div>
@@ -27,11 +27,11 @@
 </template>
 
 <script lang="ts">
-import type { Product } from "@/backend/database";
 import CartProduct from "@/components/CartProduct.vue";
 import MainHeader from "@/components/MainHeader.vue";
 import { useCartStore } from "@/stores/CartStore";
 import QuestionModal from "@/components/QuestionModal.vue";
+import type { ProductType } from "@/types/interfaces";
 
 export default {
     name: "CartView",
@@ -43,33 +43,33 @@ export default {
                 searchRequired: false,
                 notificationsRequired: true
             },
-            cartProducts: useCartStore(),
+            cartStore: useCartStore(),
             modal: {
                 visible: false,
                 content: ""
             },
-            tempIdForDeleting: 0
+            tempSlugForDeleting: ""
         }
     },
     computed: {
         totalPrice() {
-            return this.cartProducts.fullPrice;
+            return this.cartStore.fullPrice;
         },
         isCartEmpty() {
-            return !this.cartProducts.getProductsFromCart.length;
+            return !this.cartStore.getProductsFromCart.length;
         }
     },
     methods: {
-        getProductQuantity(id: number): number {
-        return this.cartProducts.cartProductsStructure.get(id) || 0 as number;
+        getProductQuantity(slug: string): number {
+        return this.cartStore.cartProductsStructure.get(slug) || 0 as number;
         },
         changeModalVisibility(): void {
             this.modal.visible = !this.modal.visible;
         },
-        useModal(content: string, idForDeleting?: number): void {
+        useModal(content: string, slugForDeleting?: string): void {
             this.modal.content = content;
             this.changeModalVisibility();
-            this.tempIdForDeleting = idForDeleting || 0;
+            this.tempSlugForDeleting = slugForDeleting || "";
         },
         cancelClear(): void {
             this.changeModalVisibility();
@@ -77,29 +77,29 @@ export default {
         },
         confirmClear(): void {
             try {
-                this.cartProducts.clearCart();
+                this.cartStore.clearCart();
                 this.changeModalVisibility();
             }
             catch(e) {
-                console.error("Ошибка удаления!");
+                console.error("Ошибка удаления товара!");
             }
             finally {
                 this.modal.content = "";
             }
         },
-        removeLastProductTask(id: number): void {
-            const quantity = this.getProductQuantity(id);
+        removeLastProductTask(slug: string): void {
+            const quantity = this.getProductQuantity(slug);
             if (quantity === 1) {
-                this.useModal('deleteLastProduct', id);
+                this.useModal("deleteLastProduct", slug);
             }
             else
-                this.cartProducts.removeFromCart(id);
+                this.cartStore.removeFromCart(slug);
         },
         deleteLastProduct(): void {
-            const id = this.tempIdForDeleting;
-            this.cartProducts.removeFromCart(id);
+            const slug = this.tempSlugForDeleting;
+            this.cartStore.removeFromCart(slug);
             this.changeModalVisibility();
-            this.tempIdForDeleting = 0;
+            this.tempSlugForDeleting = "";
         }
     }
 }

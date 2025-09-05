@@ -1,37 +1,39 @@
 <template>
-    <div class="card-wrapper">
-        <router-link :to="`/product/${productId}`">
+    <div class="card-wrapper" v-if="product">
+        <router-link :to="`/product/${product.slug}`">
             <section>
-                <img class="card-photo" :src="imagePath"/>
+                <img class="card-photo" :src="product.images[0].image" :alt="'Фотография товара'"/>             <!-- в последствии будет только isPreview изобр.-->
             </section>
             <footer class="card-footer">
-                <p class="category-model">{{ cardDescription[0] }}</p>
-                <p class="brand">{{ cardDescription[1] }}</p>
-                <p class="price">{{ cardDescription[2] }}</p>
+                <div class="category-model">
+                    <p>{{ product.name }}</p>          <!-- нужно сделать product names без бренда в начале имени! -->
+                </div>
+                <p class="brand">{{ product.brand}}</p>
+                <p class="price">{{ formattedPrice}} руб.</p>
             </footer>
         </router-link>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, type PropType } from "vue";
+import type { ProductType } from "@/types/interfaces";
+import { getFormattedPrice } from "@/utils/reusable_functions";
 
 export default defineComponent ({
     name: "ProductCard",
     props: {
-        productId: {
-            type: Number,
-            required: true,
-        },
-        cardDescription: {
-            type: Array,
-            required: true
-        },
-        imagePath: {
-            type: String,
+        product: {
+            type: Object as PropType<ProductType>,
             required: true
         }
     },
+    computed: {
+        formattedPrice() {
+            if (this.product)
+                return getFormattedPrice(this.product.price);
+        }
+    }
 });
 
 </script>

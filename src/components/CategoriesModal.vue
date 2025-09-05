@@ -1,46 +1,72 @@
 <template>
-    <teleport to='body'>
+    <teleport to="body">
         <div class="modal-wrapper">
             <div class="modal-content" ref="modalRef">
                 <form>
-                    <p class="types">Основные</p>
-                    <ul class="categories-list less-categories">
-                        <li v-for="(mainCategory, idx) of mainCategories" :key="idx">
+                    <p class="types">Типы</p>
+                    <transition-group name="categories" tag="ul" class="categories-list">
+                        <li v-for="(typeName, idx) in typeNames" :key="idx" class="type">
                             <label>
-                                <input type="checkbox" v-model="selectedOptions[0]" :value="mainCategory" name="mainCategory">{{ mainCategory }}
+                                <input type="checkbox" v-model="selectedOptions.types" @change="handleTypeCheckboxChange" :value="typeName" name="mainCategory">{{ typeName }}
                             </label>
+                            <ul v-if="checkTypeSelected(typeName)" class="categories-list">
+                                <li v-for="(subtype, idx) in getSubtypesForType(typeName)" :key="idx">
+                                    <label class="sublabels">
+                                        <input type="checkbox"
+                                        :checked="isSubtypeSelected(typeName, subtype)"
+                                        :value="subtype"
+                                        @change="toggleSubtype(typeName, subtype)"
+                                        name="mainCategory">{{ subtype }}
+                                    </label>
+                                </li>
+                            </ul>
                         </li>
-                    </ul>
-                    <p class="types">Дополнительные</p>
+                    </transition-group>
+                    <p class="types">Бренды</p>
                     <ul class="categories-list">
-                        <li v-for="(otherCategory, idx) of otherCategories" :key="idx">
+                        <li v-for="(brandName, idx) in brandNames" :key="idx">
                             <label>
-                                <input type="checkbox" v-model="selectedOptions[1]" :value="otherCategory" name="otherCategory">{{ otherCategory }}
+                                <input type="checkbox" v-model="selectedOptions.brands" :value="brandName" name="otherCategory">{{ brandName }}
                             </label>
                         </li>
                     </ul>
                 </form>
-                <button @click="$emit('use-categories', selectedOptions)" :disabled="!selectedOptions[0].length && !selectedOptions[1].length">Применить</button>
+                <button @click="$emit('use-categories', selectedOptions)" :disabled="isEmptySelected">Применить</button>
             </div>
         </div>
     </teleport>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { closeByButton } from '@/utils/reusable_functions';
-import { mainCategoriesStructure } from '@/backend/database';
-import { otherCategoriesStructure } from '@/backend/database';
+import { defineComponent } from "vue";
+import { closeByButton } from "@/utils/reusable_functions";
+import { useProductStore } from "@/stores/ProductStore";
+import type { Brand, Category, SelectedCategories } from "@/types/interfaces";
+
 export default defineComponent({
     name: "CategoriesModal",
     data() {
         return {
-            selectedOptions: [[], []] as Array<Array<string>>,
-            mainCategories: mainCategoriesStructure as Set<string>,
-            otherCategories: otherCategoriesStructure as Set<string>
+            selectedOptions: { types: [], brands: [], subtypes: {} } as SelectedCategories,
+            types: [] as Array<Category>,
+            brands: [] as Array<Brand>
         }
     },
     methods: {
+        getSubtypesForType(typeName: string): Array<string> {
+            const category = this.types.find(c => c.name === typeName);
+            return category ? category.subtypes.map(st => st.name) : [];
+        },
+        checkSelectedSubtypeArraysEmpty(): boolean {
+            return this.allSubtypeArrays.every((st) => st.length === 0);
+        },
+        checkTypeSelected(typeName: string): boolean {
+            return this.selectedOptions.types.includes(typeName);
+        },
+        clearSubtypesForType(typeName: string): void {
+            if (this.selectedOptions.subtypes[typeName])
+                this.selectedOptions.subtypes[typeName].length = 0;
+        },
         closeModal(event: MouseEvent): void {
             const modal = this.$refs.modalRef as HTMLElement | undefined;
             if (modal && !modal.contains(event.target as Node))
@@ -48,20 +74,62 @@ export default defineComponent({
         },
         handleKeyDown(event: KeyboardEvent): void {
             closeByButton(event, this.$emit as (event: string, ...args: any[]) => void);
+        },
+        handleTypeCheckboxChange(event: Event): void {
+            const checkboxValue = (event.target as HTMLInputElement | undefined)?.value;
+            if (checkboxValue && !this.checkTypeSelected(checkboxValue)) {
+                this.clearSubtypesForType(checkboxValue);
+            }
+        },
+        toggleSubtype(typeName: string, subtype: string): void {
+            if (!this.selectedOptions.subtypes[typeName]) 
+                this.selectedOptions.subtypes[typeName] = [];
+
+            const foundSubtypes = this.selectedOptions.subtypes[typeName];
+            const idx = foundSubtypes.indexOf(subtype);
+
+            if (idx === -1)
+                foundSubtypes.push(subtype);
+            else
+                foundSubtypes.splice(idx, 1);
+        },
+        isSubtypeSelected(typeName: string, subtype: string): boolean {
+            return this.selectedOptions.subtypes[typeName]?.includes(subtype) ?? false;
         }
     },
-    emits: ['use-categories', 'close'],
+    computed: {
+        allSubtypeArrays(): Array<Array<string>> {
+            return Object.values(this.selectedOptions.subtypes);
+        },
+        typeNames(): Array<string> {
+            return this.types.map(type => type.name);
+        },
+        brandNames(): Array<string> {
+            return this.brands.map(brand => brand.name);
+        },
+        isEmptySelected(): boolean {
+            return this.selectedOptions.brands.length === 0
+            && this.checkSelectedSubtypeArraysEmpty()
+            && this.selectedOptions.types.length === 0;
+        }
+    },
+    emits: ["use-categories", "close"],
+    beforeMount() {
+        const productStore = useProductStore();
+        this.types = productStore.orderingsAndSortings.types;
+        this.brands = productStore.orderingsAndSortings.brands;
+    },
     mounted() {
         setTimeout(() => {
             document.addEventListener("click", this.closeModal);
             document.addEventListener("keydown", this.handleKeyDown);
-            document.body.style.setProperty('overflow-y','hidden');
+            document.body.style.setProperty("overflow-y","hidden");
         }, 0);
     },
     unmounted() {
+        document.removeEventListener("click", this.closeModal);
         document.removeEventListener("keydown", this.handleKeyDown);
-        document.removeEventListener("keydown", this.handleKeyDown);
-        document.body.style.removeProperty('overflow-y');
+        document.body.style.removeProperty("overflow-y");
     }
 });
 </script>
@@ -104,23 +172,35 @@ export default defineComponent({
     background-color: vars.$supporting-golden;
     border-radius: 24px;
 }
+.type {
+    overflow: hidden;
+    &:has(input:checked) {
+        background: color.adjust(vars.$supporting-golden, $lightness:5%);
+        border-radius: 12px;
+        label {
+            border: 0;
+        }
+    }
+}
+.sublabels:has(input:checked) {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
 .categories-list {
     margin: 0;
     list-style-type: none;
     display: flex;
     flex-wrap: wrap;
-    
-    &:not(.less-categories) {
-        overflow-y:scroll;
-    }
-    
+    overflow: auto;
     max-width: 100%;
     max-height: 33vh;
 }
 .categories-list li {
-    width: fit-content;
+    width: 100%;
     margin: 5px;
     flex-grow: 1;
+    &:not(.type) {
+        width: fit-content;
+    }
 }
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.95); }
@@ -141,13 +221,13 @@ label {
     background-color: vars.$body-color;
     color: vars.$supporting-golden-lighten;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: all 0.1s ease;
     font-size: 16px;
+    max-width: 100%;
 
     &:has(input:checked) {
         background: color.adjust(vars.$supporting-golden, $lightness:5%);
         color: vars.$card-color;
-        scale: 1.02;
     }
 
     input[type="checkbox"] {
@@ -165,5 +245,8 @@ label {
             background: vars.$body-color;
         }
     }
+}
+.categories-move {
+    transition: all 0.2s ease;
 }
 </style>

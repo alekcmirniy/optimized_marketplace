@@ -1,18 +1,18 @@
 <template>
     <div v-if="product">
-        <img :src="product.imagePath" class="product-image"/>
+        <img :src="product.images[0].image" class="product-image"/>             <!-- заменить изображения корректно когда isPreview -->
         <main class="description-container">
             <p class="brand">{{ product.brand }} </p>
             <div class="flexed">
-                <p class="model">{{ product.categories.mainCategory }}</p>
-                <p class="model">{{ product.model }}</p>
+                <p class="model">{{ product.type }}</p>
+                <p class="model">{{ product.name }}</p>             <!-- почему класс model? -->
             </div>
-            <p class="price">{{ getFormattedPrice(product.price) }} руб.</p>
+            <p class="price">{{ formattedPrice }} руб.</p>
             <div class="rating-container">
                 <img class="rating-icon" :src="RatingIcon" /> 
                 <p class="rating">Рейтинг: {{ product.rating }}</p>
             </div>
-            <button @click="handleToCart(product.id)" class="buy-button">
+            <button @click="handleToCart(product.slug)" class="buy-button">
                 В корзину
             </button>
         </main>
@@ -23,41 +23,42 @@
 </template>
 
 <script lang="ts">
-import { getFormattedPrice } from '@/utils/reusable_functions';
 import { defineComponent } from 'vue';
 import { useProductStore } from '@/stores/ProductStore';
 import { useCartStore } from '@/stores/CartStore';
-import { Product } from '@/backend/database'
-import RatingIcon from '@/components/icons/rating.png';
+import RatingIcon from '@/components/icons/Rating.png';
+import type { ProductType } from '@/types/interfaces';
+import { getFormattedPrice } from '@/utils/reusable_functions';
 
 export default defineComponent({
     name: "ProductView",
     props: {
-        id: {
-            type: Number,
+        slug: {
+            type: String,
             required: true
         }
     },
     data() {
         return {
-            product: null as Product | null,
+            product: null as ProductType | null,
             RatingIcon: RatingIcon,
             productStore: useProductStore(),
             cartStore: useCartStore()
         }
     },
     computed: {
-        getFormattedPrice(): Function {
-            return getFormattedPrice;
+        formattedPrice() {
+            if (this.product)
+                return getFormattedPrice(this.product.price);
         }
     },
     methods: {
-        handleToCart(id: number): void {
-            this.cartStore.addToCart(id);
+        handleToCart(slug: string): void {
+            this.cartStore.addToCart(slug);
         }
     },
-    mounted() {
-        this.product = this.productStore.getProductById(this.id);
+    beforeMount() {
+        this.product = this.productStore.getProductBySlug(this.slug);
     }
 });
 

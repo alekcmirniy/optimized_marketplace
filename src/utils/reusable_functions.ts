@@ -4,8 +4,8 @@ function closeByButton(event: KeyboardEvent, emit: (event: string, ...args: Arra
         emit("close");
 }
 
-function getFormattedPrice(price: number) : string {   
-    let outPrice = price.toString().split("").reverse();
+function getFormattedPrice(price: string) : string {   
+    let outPrice = price.split("").reverse();
     let formatted = [];
     for (let i = 0; i < outPrice.length; i++) {
         if (i > 0 && i % 3 === 0) {
@@ -15,4 +15,6 @@ function getFormattedPrice(price: number) : string {
     }
     return formatted.reverse().join("");
 }
-export { closeByButton, getFormattedPrice };
+
+export { closeByButton };
+export { getFormattedPrice }
