@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import type { Slide, CategoriesSliderType,MainSliderType } from "@/utils/slides";
+import type { Slide } from "@/utils/slides";
 import { defineComponent } from 'vue';
 
 export default defineComponent({

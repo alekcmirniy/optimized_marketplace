@@ -42,7 +42,7 @@ export const useCartStore = defineStore("CartStore", {
         },
         
         addToCart(slug: string): void {
-            const product = useProductStore().getMappedProducts.get(slug);
+            const product = useProductStore().getProductBySlug(slug);
 
             //проверка наличия товара в базе данных
             if (!product) {
@@ -82,7 +82,7 @@ export const useCartStore = defineStore("CartStore", {
         },
 
         recountFullPrice(slug: string, operation: string): void {
-            const product = useProductStore().getMappedProducts.get(slug);
+            const product = useProductStore().getProductBySlug(slug);
 
             //проверка наличия товара в базе данных
             if (!product) {
@@ -111,7 +111,7 @@ export const useCartStore = defineStore("CartStore", {
 
     getters: {
         getProductsFromCart: (state) => {
-            const products = useProductStore().getMappedProducts;
+            const products = useProductStore().productsMap;
             return Array.from(state.cartProductsStructure.keys())
             .map((slug) => products.get(slug))
             .filter(Boolean) as Array<ProductType>;

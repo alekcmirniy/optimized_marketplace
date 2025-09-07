@@ -14,7 +14,7 @@
         <p class="covering">Лучшие товары</p>
         <div class="best-wrapper">
             <ul class="best-catalog">
-                <li v-for="(product, index) of bestRating" :key="index">
+                <li v-for="product of bestRating" :key="product.slug">
                     <ProductCard class="best-product" :product="product"/>
                 </li>
             </ul>
@@ -64,39 +64,25 @@ export default defineComponent({
         }
     },
     async created(): Promise<void> {
-        if (!this.dailyProduct || !this.productStore.dailyProduct) {
+        if (!this.dailyProduct) {
             await this.productStore.initDailyProduct();
         }
-        if (!this.productStore.homeBest.products.length) {
+        if (!this.productStore.homeBest.productsMap.size) {
             await this.productStore.fetchHomeProducts();
         }
-
-        if (!this.mainSlides.length || !this.categoriesSlides.length) {
-            await this.productStore.init();
-        }
-    },
-    unmounted() {
-        this.productStore.homeBest = { products: [], nextPage: null };
     },
     computed: {
         bestRating(): Array<ProductType> {
-            return this.productStore.homeBest.products;
-        },
-        nextPage(): string | null {
-            return this.productStore.homeBest.nextPage;
+            return Array.from(this.productStore.homeBest.productsMap.values());
         },
         dailyProduct(): ProductType {
             return this.productStore.dailyProduct as ProductType;
         },
         mainSlides(): Array<Slide> {
-            const slidesObject = Object.values(this.productStore.mainSlides);
-            const slidesArray = Array.from(slidesObject);
-            return slidesArray.filter(slide => slide.src);
+            return Object.values(this.productStore.mainSlides).filter(slide => slide.src);
         },
         categoriesSlides(): Array<Slide> {
-            const slidesObject = Object.values(this.productStore.categoriesSlides);
-            const slidesArray = Array.from(slidesObject);
-            return slidesArray.filter(slide => slide.src);
+            return Object.values(this.productStore.categoriesSlides).filter(slide => slide.src);
         }
     },
     methods: {
@@ -218,7 +204,6 @@ $block-covering-height: 40px;
     max-height: var(--catalog-max-height);
     margin: 10px 0;
     display: grid;
-    display: ms-grid;
     justify-content: center;
     gap: 20px 10px;
 

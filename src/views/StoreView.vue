@@ -24,7 +24,7 @@
         v-if="questionModal.visible" :content="questionModal.content" />
 
         <ul class="card-catalog">
-            <li v-for="(product, index) in catalog" :key="index">
+            <li v-for="product in catalog" :key="product.slug">
                 <ProductCard :product="product" />
             </li>
         </ul>
@@ -134,7 +134,7 @@ export default defineComponent({
             await this.productStore.fetchNextPage();
         },
         handleScroll(): void {
-            this.scrollY = window.scrollY;                                  //оптимизировать скролл!
+            this.scrollY = window.scrollY;      //TODO оптимизация скролла!
         }
     },
     mounted() {

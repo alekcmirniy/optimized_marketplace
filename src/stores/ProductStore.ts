@@ -1,17 +1,17 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import { mainSliderCollection, categoriesSliderCollection } from '@/utils/slides';
-import { createURLFromParameters, checkCategoriesEmpty, extractPageNumber } from "@/utils/reusable_functions";
 import type { MainSliderType, CategoriesSliderType } from '@/utils/slides';
+import { createURLFromParameters, checkCategoriesEmpty, extractPageNumber } from "@/utils/reusable_functions";
 import type { ProductType, ProductsApiResponse, OrderingsAndSortings, SelectedCategories, PossibleQueryParams } from "@/types/interfaces";
 
 export const useProductStore = defineStore("ProductStore", {
     state: () => ({
-        products: [] as Array<ProductType>,
+        productsMap: new Map<string, ProductType>(),
         orderingsAndSortings: {} as OrderingsAndSortings,
 
         homeBest: {
-            products: [] as Array<ProductType>,
+            productsMap: new Map<string, ProductType>(),
             nextPage: null as string | null
         },
 
@@ -36,7 +36,7 @@ export const useProductStore = defineStore("ProductStore", {
                 ordering: filter,
                 brand: categories.brands,
                 type: categories.types,
-                subtype: Array.from(Object.values(categories.subtypes)).flat(Infinity),
+                subtype: Object.values(categories.subtypes).flat(Infinity),
                 page: nextPageNumber
             } as PossibleQueryParams;
 
@@ -49,10 +49,13 @@ export const useProductStore = defineStore("ProductStore", {
                 const res = await axios.get<ProductsApiResponse>(url);
                 if (res.status === 200) {
                     if (nextPage?.length) {
-                        this.products.push(...res.data.results)
+                        res.data.results.forEach((item) => {
+                            !this.productsMap.has(item.slug) ? this.productsMap.set(item.slug, item) : null;
+                        });
                     }
                     else {
-                        this.products = res.data.results;
+                        this.productsMap.clear();
+                        res.data.results.forEach(item => this.productsMap.set(item.slug, item));
                     }
                     this.nextPage = res.data.next ? res.data.next.substring(res.data.next.indexOf("api/")) : null;
                 }
@@ -95,10 +98,14 @@ export const useProductStore = defineStore("ProductStore", {
             try {
                 const res = await axios.get<ProductsApiResponse>(url);
                 if (res.status === 200) {
-                    if (!nextPage) 
-                        this.homeBest.products = res.data.results;
-                    else
-                        this.homeBest.products.push(...res.data.results);
+                    if (nextPage?.length)
+                        res.data.results.forEach((item) => {
+                            !this.homeBest.productsMap.has(item.slug) ? this.homeBest.productsMap.set(item.slug, item) : null;
+                        });
+                    else {
+                        this.homeBest.productsMap.clear();
+                        res.data.results.forEach(item => this.homeBest.productsMap.set(item.slug, item));
+                    }
                     this.homeBest.nextPage = res.data.next ? res.data.next.substring(res.data.next.indexOf("api/")) : null;                
                 }
                 else throw new Error("Некорректный ответ с сервера при запросе списка товаров домашней страницы!");
@@ -171,8 +178,8 @@ export const useProductStore = defineStore("ProductStore", {
         async initDailyProduct(): Promise<void> {
             const daily = await this.fetchDailyProduct();
 
-            if (daily && !this.products.some(product => product.slug === daily.slug))
-                this.products.push(daily);
+            if (daily && !this.productsMap.has(daily.slug))
+                this.productsMap.set(daily.slug, daily);
             this.dailyProduct = daily;
         },
 
@@ -185,8 +192,8 @@ export const useProductStore = defineStore("ProductStore", {
         },
 
         getProductBySlug(slug: string): ProductType | null {
-            return this.products.find(item => item.slug === slug) 
-            || this.homeBest.products.find(item => item.slug === slug)
+            return this.productsMap.get(slug)
+            || this.homeBest.productsMap.get(slug)
             || null;
         }
     },
@@ -198,11 +205,11 @@ export const useProductStore = defineStore("ProductStore", {
 
             brands.length ? parts.push(brands.join(",")) : null;
             types.length ? parts.push(types.join(",")) : null;
-            const subtypesArray = Array.from(Object.values(subtypes));
+            const subtypesArray = Object.values(subtypes);
             subtypesArray.length ? parts.push(subtypesArray.join(",")) : null;          //TODO надо сделать фулл отображение при наведении или раскрывании
 
             return parts.join(",");
         },
-        getMappedProducts: (state) => new Map(state.products.map(prod => [prod.slug, prod]))   //TODO новое поле mappedProducts и метод, который обновляет его при пагинации
+        products: (state) => Array.from(state.productsMap.values())
     }
 });
