@@ -24,7 +24,6 @@ export default defineComponent({
         setTimeout(() => {
         this.observer = new IntersectionObserver(([entry]) => {
             if (entry && entry.isIntersecting) {
-                console.log("Observer: Пора делать запрос!");
                 this.$emit('intersect');
             }
         }, this.options);

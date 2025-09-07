@@ -34,6 +34,7 @@
 </template>
 
 <script lang="ts">
+
 import MainHeader from '@/components/MainHeader.vue';
 import ProductCard from '@/components/ProductCard.vue';
 import CategoriesSection from '@/components/CategoriesSection.vue';
@@ -46,6 +47,7 @@ import QuestionModal from '@/components/QuestionModal.vue';
 import type { ProductType, SelectedCategories } from '@/types/interfaces';
 import Observer from '@/components/Observer.vue';
 import ToTopButton from '@/components/ToTopButton.vue';
+import { checkCategoriesEmpty } from '@/utils/reusable_functions';
 
 export default defineComponent({
     name: "StoreView",
@@ -77,7 +79,7 @@ export default defineComponent({
             return this.productStore.currentFilter;
         },
         catalog(): Array<ProductType> {
-            return this.productStore.filteredProducts.length ? this.productStore.filteredProducts : this.productStore.products;
+            return this.productStore.products;
         },
         userPositionCheck(): boolean {
             return this.scrollY > 500;
@@ -106,20 +108,20 @@ export default defineComponent({
             this.questionModal.content = "";
         },
         async confirmResetCategories(): Promise<void> {
-            this.productStore.filteredProducts = [];
-            this.productStore.currentCategories = { types: [], brands: [], subtypes: {} };
-            //await this.productStore.fetchProducts();                          тут будет запрос по фильтрам
             this.changeQuestionModalVisibility();
-            await nextTick();
-            await this.productStore.fetchProducts();
+            this.productStore.currentCategories = { types: [], brands: [], subtypes: {} };
+            
+            this.productStore.currentFilter
+            ? await this.productStore.applyFiltersAndCategories(this.productStore.currentFilter, { types: [], brands: [], subtypes: {} })
+            : await this.productStore.applyFiltersAndCategories("", { types: [], brands: [], subtypes: {} });
         },
         async confirmResetFilters(): Promise<void> {
-            this.productStore.filteredProducts = [];
-            this.productStore.currentFilter = "";
-            //await this.productStore.fetch                                     тут будет запрос по категориям
             this.changeQuestionModalVisibility();
-            await nextTick();
-            await this.productStore.fetchProducts();
+            this.productStore.currentFilter = "";
+
+            checkCategoriesEmpty(this.productStore.currentCategories)
+            ? await this.productStore.applyFiltersAndCategories("", { types: [], brands: [], subtypes: {} })
+            : await this.productStore.fetchProducts("", this.productStore.currentCategories);
         },
         useModal(value: string): void {
             if (value === 'reset-categories')

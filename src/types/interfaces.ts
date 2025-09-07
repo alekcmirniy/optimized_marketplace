@@ -55,3 +55,10 @@ export interface OrderingsAndSortings {
     brands: Array<Brand>,
     orderings: Array<Ordering>
 }
+export interface PossibleQueryParams {
+    ordering?: string;
+    brand?: Array<string>;
+    type?: Array<string>;
+    subtype?: Array<string>;
+    page?: string
+}
