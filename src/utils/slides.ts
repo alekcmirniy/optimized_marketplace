@@ -6,6 +6,7 @@ import SlideIcon4 from '@/utils/slides/Slide4.png';
 type Slide = {
     src: string;
     alt: string;
+    loading?: "lazy" | undefined
     filter?: string
     categories?: string
 }
@@ -22,7 +23,7 @@ const saleSlide: Slide = { src: SlideIcon1, alt: "Слайд распродаж�
 const newsSlide: Slide = { src: SlideIcon2, alt: "Слайд новинки", filter: "created_at"};
 const bestPriceSlide: Slide = { src: SlideIcon3, alt: "Слайд лучшая цена", filter: "price"};
 
-const shoesSlide: Slide = { src: SlideIcon4, alt: "Слайд обувь", categories: "shoes"};
+const shoesSlide: Slide = { src: SlideIcon4, alt: "Слайд обувь", loading: "lazy", categories: "shoes"};
 
 const mainSliderCollection: MainSliderType = {
     saleSlide: saleSlide,

@@ -8,14 +8,14 @@
         @categories-section-open="openCategoriesSection" 
         @reset-categories="useModal('reset-categories')" />
 
-        <CategoriesModal v-if="categoriesIsOpen" @close="categoriesIsOpen = false" @use-categories="useCategories" />
+        <CategoriesModal v-if="modal.categories" @close="modal.categories = false" @use-categories="useCategories" />
         
         <FilterSection :activeFilter="currentFilter"
         @use-filters="useFilters"
         @filter-section-open="openFilterSection" 
         @reset-filters="useModal('reset-filters')" />
 
-        <FilterModal v-if="filtersIsOpen" @close="filtersIsOpen = false" @use-filters="useFilters" />
+        <FilterModal v-if="modal.filters" @close="modal.filters = false" @use-filters="useFilters" />
         
         <QuestionModal @close="changeQuestionModalVisibility"
         @confirm-reset-categories="confirmResetCategories"
@@ -60,15 +60,20 @@ export default defineComponent({
                 notificationsRequired: true,
             },
 
-            filtersIsOpen: false,
-            categoriesIsOpen: false,
+            modal: {
+                filters: false,
+                categories: false
+            },
+
             productStore: useProductStore(),
             questionModal: {
                 visible: false,
                 content: ""
             },
-
-            scrollY: 0
+            scrollParams: {
+                scrollY: 0,
+                scrollTimeout: null as number | null
+            }
         }
     },
     computed: {
@@ -82,22 +87,22 @@ export default defineComponent({
             return this.productStore.products;
         },
         userPositionCheck(): boolean {
-            return this.scrollY > 500;
+            return this.scrollParams.scrollY > 500;
         }
     },
     methods: {
         openFilterSection(): void {
-            this.filtersIsOpen = true;
+            this.modal.filters = true;
         },
         openCategoriesSection(): void {
-            this.categoriesIsOpen = true;
+            this.modal.categories = true;
         },
         async useFilters(selectedFilter: string): Promise<void> {
-            this.filtersIsOpen = false;
+            this.modal.filters = false;
             await this.productStore.applyFiltersAndCategories(selectedFilter, this.productStore.currentCategories);
         },
         async useCategories(selectedCategories: SelectedCategories): Promise<void> {
-            this.categoriesIsOpen = false;
+            this.modal.categories = false;
             await this.productStore.applyFiltersAndCategories(this.currentFilter, selectedCategories);
         },
         changeQuestionModalVisibility(): void {
@@ -133,8 +138,10 @@ export default defineComponent({
         async intersected(): Promise<void> {
             await this.productStore.fetchNextPage();
         },
-        handleScroll(): void {
-            this.scrollY = window.scrollY;      //TODO оптимизация скролла!
+        handleScroll() {
+            if (this.scrollParams.scrollTimeout) return;
+            this.scrollParams.scrollY = window.scrollY;
+            this.scrollParams.scrollTimeout = setTimeout(() => (this.scrollParams.scrollTimeout = null), 300);
         }
     },
     mounted() {

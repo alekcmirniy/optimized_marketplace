@@ -1,7 +1,7 @@
 <template>
     <div class="slider-wrapper" aria-label="Галерея-подборок">
         <div>
-            <img v-if="slides?.length" class="slider-image" :src="slides[currentIndex].src" :alt="slides[currentIndex].alt" role="img" />
+            <img v-if="slides?.length" class="slider-image" :src="slides[currentIndex].src" :alt="slides[currentIndex].alt" :loading="slides[currentIndex].loading" role="img" />
         </div>
     </div>
 </template>

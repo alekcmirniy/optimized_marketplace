@@ -2,7 +2,7 @@
     <div class="card-wrapper" v-if="product">
         <router-link :to="`/product/${product.slug}`">
             <section>
-                <img class="card-photo" :src="product.images[0].image" :alt="'Фотография товара'"/>             <!-- в последствии будет только isPreview изобр.-->
+                <img class="card-photo" :src="product.images[0].image" :alt="'Фотография товара'" loading="lazy"/>             <!-- в последствии будет только isPreview изобр.-->
             </section>
             <footer class="card-footer">
                 <div class="category-model">
