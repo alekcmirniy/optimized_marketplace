@@ -1,9 +1,11 @@
 <template>
-    <div class="slider-wrapper" aria-label="Галерея-подборок">
-        <div>
-            <img v-if="slides?.length" class="slider-image" :src="slides[currentIndex].src" :alt="slides[currentIndex].alt" :loading="slides[currentIndex].loading" role="img" />
+    <router-link :to="{ name: 'store', query: { slideIdx: slides[currentIndex].id }, hash: '#top' }">   <!-- TODO если в хеше есть топ то прокрутка наверх !-->
+        <div class="slider-wrapper" aria-label="Галерея-подборок">
+            <div>
+                <img v-if="slides?.length" class="slider-image" :src="slides[currentIndex].src" :alt="slides[currentIndex].alt" :loading="slides[currentIndex].loading" role="img" />
+            </div>
         </div>
-    </div>
+    </router-link>
 </template>
 
 <script lang="ts">

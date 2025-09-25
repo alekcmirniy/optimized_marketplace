@@ -41,7 +41,7 @@ import CategoriesSection from '@/components/CategoriesSection.vue';
 import FilterSection from '@/components/FilterSection.vue';
 import FilterModal from '@/components/FilterModal.vue';
 import CategoriesModal from '@/components/CategoriesModal.vue';
-import { defineComponent, nextTick } from 'vue';
+import { defineComponent } from 'vue';
 import { useProductStore } from '@/stores/ProductStore';
 import QuestionModal from '@/components/QuestionModal.vue';
 import type { ProductType, SelectedCategories } from '@/types/interfaces';
@@ -142,13 +142,25 @@ export default defineComponent({
             if (this.scrollParams.scrollTimeout) return;
             this.scrollParams.scrollY = window.scrollY;
             this.scrollParams.scrollTimeout = setTimeout(() => (this.scrollParams.scrollTimeout = null), 300);
-        }
+        },
+    },
+    async beforeMount() {
+        const slideIdx = new Map(Object.entries(this.$route.query)).get("slideIdx");
+        if (!slideIdx) return;
+        
+        const found = Object.values(this.productStore.mainSlides)
+        .find(slide => slide.id.toString() === slideIdx)
+        ?? Object.values(this.productStore.categoriesSlides)
+        .find(slide => slide.id.toString() === slideIdx);
+
+        if (found)
+            await this.productStore.applyFiltersAndCategories(found.filter || "", found.categories || { types: [], brands: [], subtypes: {} });
     },
     mounted() {
-        addEventListener("scroll", this.handleScroll);
+        document.addEventListener("scroll", this.handleScroll);
     },
     unmounted() {
-        removeEventListener("scroll", this.handleScroll);
+        document.removeEventListener("scroll", this.handleScroll);
     }
 });
 </script>

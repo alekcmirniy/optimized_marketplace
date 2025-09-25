@@ -3,9 +3,7 @@
         <MainHeader :header="headerData" />
         <div>
             <p class="covering">Подборки дня</p>
-            <router-link to="/store">
-                <CompilationSlider v-if="mainSlides?.length" :slides="mainSlides" />
-            </router-link>
+            <CompilationSlider v-if="mainSlides?.length" :slides="mainSlides" />
         </div>
         <div class="daily">
             <label class="daily-product-label covering">Товар дня</label>
@@ -31,9 +29,7 @@
         </div>
         <div>
             <p class="covering">Популярные подборки</p>
-            <router-link to="/store">
-                <CompilationSlider v-if="categoriesSlides?.length" :slides="categoriesSlides" />
-            </router-link>
+            <CompilationSlider v-if="categoriesSlides?.length" :slides="categoriesSlides" />
         </div>
     </div>
 </template>

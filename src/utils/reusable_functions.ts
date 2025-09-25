@@ -39,7 +39,8 @@ function createURLFromParameters(params: PossibleQueryParams): string {
 
 import type { SelectedCategories } from "../types/interfaces";
 
-function checkCategoriesEmpty(categories: SelectedCategories): boolean {
+function checkCategoriesEmpty(categories: SelectedCategories | undefined): boolean {
+    if (!categories) return true;
     if (categories.brands.length === 0 &&
         categories.types.length === 0 &&
         !Object.entries(categories.subtypes).some(arr => arr[0].length || arr[1].length)
