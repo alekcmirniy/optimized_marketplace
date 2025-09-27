@@ -53,7 +53,8 @@ export const useCartStore = defineStore("CartStore", {
             this.cartProductsStructure.set(slug, (this.cartProductsStructure.get(slug) || 0) + 1);
             if (!this.checkedProducts.has(slug))
                 this.checkedProducts.set(slug, true);
-            this.recountFullPrice(slug, "added");
+            if (!this.getCheckedState(slug)) return;
+            this.recountFullPrice(slug, "added", 1);
         },
 
         removeFromCart(slug: string): void {
@@ -64,13 +65,16 @@ export const useCartStore = defineStore("CartStore", {
 
             const currentQuantity = this.cartProductsStructure.get(slug) || 0;
             const nextQuantity = currentQuantity - 1;
-            if (nextQuantity <= 0) 
+            if (nextQuantity === 0)  {
                 this.cartProductsStructure.delete(slug);
+                this.getCheckedState(slug) ? this.recountFullPrice(slug, "deleted", 1) : null;
+                this.checkedProducts.delete(slug);
+            }
             else 
                 this.cartProductsStructure.set(slug, currentQuantity - 1);
-            
-            this.checkedProducts.delete(slug);
-            this.recountFullPrice(slug, "deleted");
+
+            if (!this.getCheckedState(slug)) return;
+            this.recountFullPrice(slug, "deleted", 1);
         },
 
         clearCart(): void {
@@ -81,16 +85,16 @@ export const useCartStore = defineStore("CartStore", {
             if (this.cartProductsStructure.size || this.checkedProducts.size) console.error("Ошибка очистки корзины!");
         },
 
-        recountFullPrice(slug: string, operation: string): void {
+        recountFullPrice(slug: string, operation: string, quantity: number): void {
             const product = useProductStore().getProductBySlug(slug);
 
             //проверка наличия товара в базе данных
             if (!product) {
-                console.error("Невозможно пересчитать - товара не существует!");
+                console.error("Невозможно пересчитать стоймость корзины - товара не существует!");
                 return;
             }
 
-            const totalPrice = Number(product.price);
+            const totalPrice = Number(product.price) * quantity;
             
             if (operation === "added") {
                 this.fullPrice += totalPrice;

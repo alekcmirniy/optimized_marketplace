@@ -50,7 +50,7 @@ export default defineComponent({
             },
             set(value: boolean): void {
                 this.cartStore.checkedProducts.set(this.product.slug, value);
-                value ? this.cartStore.recountFullPrice(this.product.slug, "added") : this.cartStore.recountFullPrice(this.product.slug, "deleted");
+                value ? this.cartStore.recountFullPrice(this.product.slug, "added", this.quantity) : this.cartStore.recountFullPrice(this.product.slug, "deleted", this.quantity);
             }
         },
         imageSource(): string {
