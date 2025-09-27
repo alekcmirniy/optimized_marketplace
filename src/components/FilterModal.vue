@@ -9,7 +9,6 @@
                     <label><input type="radio" value="-rating" v-model="selectedOption" name="filter"/>Высокий рейтинг</label>
                     <label><input type="radio" value="-views" v-model="selectedOption" name="filter"/>Популярные</label>
                 </form>
-                <!--   const allowed = ['price', '-price', 'created_at', '-rating', '-views'];   -->
                 <button @click="$emit('use-filters', selectedOption)" :disabled="!selectedOption" class="modal-button">Применить</button>
             </div>
         </div>

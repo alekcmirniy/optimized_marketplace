@@ -174,8 +174,10 @@ export default defineComponent({
     display: grid;
     grid-template-columns: 45% 45%;
     gap: 20px;
+    margin: 0 5px;
     list-style-type: none;
     padding-bottom: vars.$nav-bar-height;
+    padding-top: 10px;
 }
 @media screen and (min-width: 769px) {
     .card-catalog {

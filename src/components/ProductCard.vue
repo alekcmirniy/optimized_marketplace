@@ -43,11 +43,11 @@ export default defineComponent ({
 @use '/src/assets/variables' as vars;
 .card-wrapper {
     width: 100%;
-    margin: 12px 0 0 10px;
+    margin-left: 10px;
     overflow: hidden;
     border-radius: 15px;
     background-color: white;
-    padding: 10px;
+    padding-bottom: 10px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     background: vars.$card-color;
     color: vars.$supporting-golden-lighten;

@@ -23,8 +23,8 @@ export default defineComponent({
 @use "sass:color";
 @use '/src/assets/variables' as vars;
 .categories-wrapper {
-    margin: 10px;
-    margin-bottom: 20px;
+    max-width: 100%;
+    margin: 10px 10px 20px 10px;
     color: vars.$body-color;
     display: flex;
     gap: 10px;
