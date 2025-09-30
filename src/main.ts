@@ -1,4 +1,5 @@
 import "./assets/main.scss";
+import "sal.js/dist/sal.css";
 
 import { createApp } from "vue";
 import { createPinia } from "pinia";

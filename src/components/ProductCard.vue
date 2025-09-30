@@ -49,7 +49,7 @@ export default defineComponent ({
     background-color: white;
     padding-bottom: 10px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    background: vars.$card-color;
+    background: vars.$card-background;
     color: vars.$supporting-golden-lighten;
 }
 section {

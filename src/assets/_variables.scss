@@ -1,9 +1,9 @@
 @use "sass:color";
 $body-color: #121212;
-$card-color: #1E1E1E;
+$block-covering-color: color.adjust($body-color, $lightness:10%);
+$card-background: linear-gradient(135deg, $block-covering-color, $body-color);
 $supporting-golden: rgba(216, 197, 118, 1);
 $supporting-golden-lighten: #F5DFA2;
-$block-covering-color: color.adjust($body-color, $lightness:10%);
 $background-gradient: linear-gradient(135deg, #f1e3b3, #d6b95f);
 $background-gradient-active: linear-gradient(135deg, #d6b95f, #b28c30);
 $nav-bar-height: 8vh;

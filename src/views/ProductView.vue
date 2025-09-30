@@ -71,7 +71,7 @@ export default defineComponent({
 }
 .product-image {
     width: 100%;
-    background-color: vars.$card-color;
+    background-color: vars.$card-background;
     display: block;
 }
 .description-container {
@@ -121,7 +121,7 @@ export default defineComponent({
     object-fit: contain;
 }
 .buy-button {
-  background: vars.$card-color;
+  background: vars.$card-background;
   color: vars.$supporting-golden-lighten;
   place-self: center;
   width: 90%;

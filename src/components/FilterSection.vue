@@ -103,7 +103,7 @@ export default defineComponent ({
 
     &.active-filter {
     background-color: vars.$supporting-golden-lighten;
-    color: vars.$card-color;
+    color: vars.$card-background;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
 }

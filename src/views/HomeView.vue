@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <MainHeader :header="headerData" />
-        <div>
+        <div data-sal="slide-up" data-sal-duration="150">
             <p class="covering">Подборки дня</p>
             <CompilationSlider v-if="mainSlides?.length" :slides="mainSlides" />
         </div>
@@ -43,6 +43,7 @@ import { useProductStore } from '@/stores/ProductStore';
 import { type Slide } from '@/utils/slides';
 import { defineComponent } from 'vue';
 import type { ProductType } from '@/types/interfaces';
+import sal from "sal.js";
 
 export default defineComponent({
     name: "HomeView",
@@ -104,6 +105,9 @@ export default defineComponent({
 
             await this.productStore.fetchHomeProducts();
         }
+    },
+    mounted() {
+        this.$nextTick(() => { sal({ root: null, threshold: 0.2, once: true }) });
     }
 });
 
@@ -134,16 +138,15 @@ $block-covering-height: 40px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 .wrapper {
-    padding-bottom: vars.$nav-bar-height
+    padding-bottom: vars.$nav-bar-height;
 }
 .daily {
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: linear-gradient(135deg, #2c2c2c, #4b3d2a, #7c623e);
-    padding: 0 20px 20px 20px;
+    background: linear-gradient(135deg, vars.$block-covering-color, vars.$body-color);
     border-radius: 24px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
     position: relative;
     overflow: hidden;
 }

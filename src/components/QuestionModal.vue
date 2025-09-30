@@ -108,7 +108,7 @@ export default defineComponent({
 }
 .modal-content {
     width: 90%;
-    background: vars.$card-color;
+    background: vars.$card-background;
     border-radius: 20px;
     box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
 

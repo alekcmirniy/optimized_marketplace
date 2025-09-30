@@ -123,7 +123,7 @@ export default {
     width: 100%;
     margin: 10px;
     padding: 10px;
-    background: rgba(vars.$card-color, 0.9);
+    background: rgba(vars.$body-color, 0.9);
     position: sticky;
     top: 0;
     backdrop-filter: blur(8px);

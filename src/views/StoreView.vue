@@ -24,7 +24,7 @@
         v-if="questionModal.visible" :content="questionModal.content" />
 
         <ul class="card-catalog">
-            <li v-for="product in catalog" :key="product.slug">
+            <li v-for="product in catalog" :key="product.slug"   data-sal="zoom-in" data-sal-duration="150">
                 <ProductCard :product="product" />
             </li>
         </ul>
@@ -48,10 +48,16 @@ import type { ProductType, SelectedCategories } from '@/types/interfaces';
 import Observer from '@/components/Observer.vue';
 import ToTopButton from '@/components/ToTopButton.vue';
 import { checkCategoriesEmpty } from '@/utils/reusable_functions';
-
+import sal from "sal.js";
+    
 export default defineComponent({
     name: "StoreView",
     components: { MainHeader, ProductCard, CategoriesSection, FilterSection, FilterModal, CategoriesModal, QuestionModal, Observer, ToTopButton },
+    watch: {
+        catalog() {
+            this.$nextTick(() => { sal({ root: null, threshold: 0.2, once: true }) })
+        }
+    },
     data() {
         return {
             headerData: {
@@ -158,6 +164,7 @@ export default defineComponent({
     },
     mounted() {
         document.addEventListener("scroll", this.handleScroll);
+        this.$nextTick(() => { sal({ root: null, threshold: 0.2, once: true }) })
     },
     unmounted() {
         document.removeEventListener("scroll", this.handleScroll);

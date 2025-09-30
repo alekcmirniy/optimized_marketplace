@@ -41,6 +41,7 @@ export default defineComponent({
     bottom: vars.$nav-bar-height + 1;
     right: 12px;
     opacity: 0.8;
+    z-index: 1;
 }
 
 img {

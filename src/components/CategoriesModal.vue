@@ -152,7 +152,7 @@ export default defineComponent({
 }
 .modal-content {
     width: 90%;
-    background-color: vars.$card-color;
+    background-color: vars.$card-background;
     border: solid 1px vars.$supporting-golden;
     border-radius: 20px;
     padding: 20px 25px;
@@ -168,7 +168,7 @@ export default defineComponent({
     padding: 10px 0;
     text-align: center;
     font-size: 28px;
-    color: vars.$card-color;
+    color: black;
     background-color: vars.$supporting-golden;
     border-radius: 24px;
 }
@@ -227,7 +227,7 @@ label {
 
     &:has(input:checked) {
         background: color.adjust(vars.$supporting-golden, $lightness:5%);
-        color: vars.$card-color;
+        color: black;
     }
 
     input[type="checkbox"] {

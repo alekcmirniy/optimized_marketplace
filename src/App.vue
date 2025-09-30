@@ -29,7 +29,7 @@ export default defineComponent({
     this.cartStore.hydrateFromStorage();
     this.cartStore.initCartStore();
     await this.productStore.init();
-  }
+  },
 });
 
 </script>

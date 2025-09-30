@@ -69,7 +69,7 @@ export default defineComponent({
     z-index: 1000;
 }
 .modal-content {
-    background-color: vars.$card-color;
+    background-color: vars.$card-background;
     border: solid 1px vars.$supporting-golden;
     border-radius: 20px;
     padding: 20px 25px;
@@ -107,7 +107,7 @@ label {
 
     &:has(input:checked) {
         background: color.adjust(vars.$supporting-golden, $lightness:5%);
-        color: vars.$card-color;
+        color: vars.$card-background;
     }
 
     input[type="radio"] {

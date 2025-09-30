@@ -1,11 +1,11 @@
 <template>
     <div class="cart-product-wrapper" :class="{unchecked: !checked}">
-        <input type="checkbox" v-model="checked"/>
-        <img class = "cart-product-image" :src="imageSource" :alt="'Изображение товара'" />
+        <router-link class="link" :to="`/product/${product.slug}`">
+            <img class = "cart-product-image" :src="imageSource" :alt="'Изображение товара'" />
+        </router-link>
         <aside class="cart-product-description">
-            <div>
-                <p class="brand">{{ product.brand }}</p>
-            </div>
+            <input type="checkbox" v-model="checked"/>
+            <p class="brand">{{ product.brand }}</p>
             <p>{{ product.type }}</p>
             <p>{{ product.name }}</p>
             <p class="price">{{ fullQuantity }} руб.</p>
@@ -85,26 +85,32 @@ export default defineComponent({
 @use '@/assets/_variables.scss' as vars;
 @use "sass:color";
 .cart-product-wrapper {
+    height: 190px;
     display: flex;
-    gap: 10px;
+    justify-content: space-between;
     background-color: color.adjust(vars.$body-color, $lightness:10%);
+    gap: 4px;
     border-radius: 20px;
-    position: relative;
     transition: opacity 0.1s ease;
 }
 .unchecked {
     opacity: 0.65;
 }
 .cart-product-image {
-    max-width: 35%;
+    height: 100%;
     border-radius: 20px;
-    background: vars.$card-color;
+    background: vars.$card-background;
 }
 .cart-product-description {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 50%;
     background: vars.$background-gradient;
     color: black;
-    width: 100%;
     border-radius: 20px;
+    padding: 8px;
 }
 .cart-product-description p {
     &:not(.quantity) {
@@ -137,16 +143,15 @@ input[type=checkbox] {
     font-style: italic;
 }
 .price {
+    text-align: center;
     word-break: break-word;
     font-weight: 800;
     letter-spacing: 1px;
     font-size: 24px;
     justify-self: flex-end;
-    padding-right: 3ch;
 }
 .quantity-more-less {
     margin-top: 10px;
-    margin-bottom: 5px;
     font-size: 1.3rem;
     display: flex;
     justify-content: center;
@@ -163,6 +168,6 @@ input[type=checkbox] {
 .quantity-button {
     line-height: 1;
     background: vars.$supporting-golden-lighten;
-    outline: solid 1px vars.$card-color;
+    outline: solid 1px vars.$card-background;
 }
 </style>
