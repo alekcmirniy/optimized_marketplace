@@ -179,12 +179,13 @@ export default defineComponent({
 }
 .card-catalog {
     display: grid;
+    align-content: start;
+    justify-content: center;
     grid-template-columns: 45% 45%;
-    gap: 20px;
-    margin: 0 5px;
+    gap: 16px;
     list-style-type: none;
     padding-bottom: vars.$nav-bar-height;
-    padding-top: 10px;
+    margin-top: 10px;
 }
 @media screen and (min-width: 769px) {
     .card-catalog {

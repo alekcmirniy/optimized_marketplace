@@ -120,7 +120,7 @@ $block-covering-height: 40px;
 .covering {
     min-height: $block-covering-height;
     &:not(.daily-product-label) {
-        background: linear-gradient(135deg, rgba(255, 215, 100, 0.08), rgba(255, 200, 100, 0.12)),rgb(44, 44, 44);
+        background: linear-gradient(120deg, rgba(163, 141, 70, 0.397), rgba(27, 20, 7, 0.336)),rgb(44, 44, 44);
     }
 
     color: vars.$supporting-golden;
@@ -134,9 +134,6 @@ $block-covering-height: 40px;
 .covering:not(.best-footer) {
     margin-top: 20px;
 }
-.covering:not(.daily-product-label) {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
 .wrapper {
     padding-bottom: vars.$nav-bar-height;
 }
@@ -146,7 +143,10 @@ $block-covering-height: 40px;
     flex-direction: column;
     align-items: center;
     background: linear-gradient(135deg, vars.$block-covering-color, vars.$body-color);
-    border-radius: 24px;
+    border-radius: 40px;
+    border-top: solid 2px;
+    border-bottom: solid 2px;
+    box-shadow: -4px -2px 12px rgba(173, 190, 19, 0.486);
     position: relative;
     overflow: hidden;
 }

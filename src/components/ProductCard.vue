@@ -43,7 +43,7 @@ export default defineComponent ({
 @use '/src/assets/variables' as vars;
 .card-wrapper {
     width: 100%;
-    margin-left: 10px;
+
     overflow: hidden;
     border-radius: 15px;
     background-color: white;

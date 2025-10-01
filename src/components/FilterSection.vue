@@ -1,7 +1,7 @@
 <template>
     <div class="filter-wrapper">
         <div class="filters-plus-canceller">
-            <div @click="$emit('filter-section-open')" class="photo-plus-filters">
+            <div @click="$emit('filter-section-open')" class="photo-plus-filters" :title="activeFilter ? activeFilter : `Фильтр не выбран`">
                 <img :src="Icon" class="filter-image" alt="Фильтр - иконка"/>
                 <p class="filter-field">{{ filterField }}</p>
             </div>
@@ -10,6 +10,9 @@
         <div class="fast-filters">
             <p @click="setActiveFilter('-rating')" :class="{ 'active-filter': activeFilter === '-rating'}">Лучшее</p>
             <p @click="setActiveFilter('created_at')" :class="{ 'active-filter': activeFilter === 'created_at'}">Новинки</p>
+            <p @click="setActiveFilter('-price')" :class="{ 'active-filter': activeFilter === '-price'}">Цена ↓</p>
+            <p @click="setActiveFilter('price')" :class="{ 'active-filter': activeFilter === 'price'}">Цена ↑</p>
+            <p @click="setActiveFilter('-views')" :class="{ 'active-filter': activeFilter === '-views'}">Популярное</p>
         </div>
     </div>
 </template>
@@ -67,12 +70,14 @@ export default defineComponent ({
 @use '/src/assets/variables' as vars;
 .filter-wrapper {
     max-width: 100%;
+    gap: 10px;
     color: vars.$body-color;
     display: flex;
     justify-content: space-between;
     margin: 0 10px;
 }
 .photo-plus-filters {
+    width: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -85,16 +90,30 @@ export default defineComponent ({
     max-width: 25px;
 }
 .fast-filters {
-    justify-content:flex-end;
-    gap: 5px;
     display: flex;
+    justify-content: space-around;
+    width: 50%;
+    gap: 8px;
+    overflow: hidden;
+    p:nth-child(n + 3) {
+        display: none;
+    }
 }
 .fast-filters p {
+    height: 44px;
+    width: 50%;
+    text-align: center;
     border-radius: 20px;
     padding: 10px;
     font-size: 18px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background 0.3s ease;
+
+    
+    word-break: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     &:not(.active-filter) {
     background-color: color.adjust(vars.$body-color, $lightness: 10%);
@@ -113,16 +132,32 @@ export default defineComponent ({
     text-overflow: ellipsis;
 }
 .filters-plus-canceller {
-    max-width: 50%;
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 50%;
     display: flex;
-    flex-grow: 1;
-    gap: 5px;
-    justify-content: flex-start;
     &:has(button) {
-        justify-content: space-around;
-        .photo-plus-filters {
-            flex-grow: 0;
-            width: 50%;
+        gap: 10px;
+        justify-content: center;
+        .photo-plus-filters {       
+            flex-grow: 1;
+        }
+    }
+}
+@media screen and (min-width: 769px) {
+    .fast-filters {
+        gap: 25px;
+        p:nth-child(n + 1) {
+            display: block;
+        }
+
+    }
+    .filters-plus-canceller {
+        &:has(button) {
+            justify-content: space-around;
+        }
+        button {
+            width: 500px;
         }
     }
 }

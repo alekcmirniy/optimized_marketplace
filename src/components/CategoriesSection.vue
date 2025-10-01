@@ -1,6 +1,8 @@
 <template>
     <div class="categories-wrapper">
-        <span @click="$emit('categories-section-open')" class="categories">Категории: {{ currentCategories ? currentCategories : "Все"}}</span>
+        <span @click="$emit('categories-section-open')" class="categories" :title="currentCategories ? currentCategories : `Категории не выбраны`">
+            Категории: {{ currentCategories ? currentCategories : "Все"}}
+        </span>
         <button @click="$emit('reset-categories')" v-if="currentCategories">Сброс</button>
     </div>
 </template>
