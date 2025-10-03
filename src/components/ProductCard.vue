@@ -6,7 +6,7 @@
             </section>
             <footer class="card-footer">
                 <div class="category-model">
-                    <p>{{ product.name }}</p>          <!-- нужно сделать product names без бренда в начале имени! -->
+                    <p>{{ product.name }}</p>
                 </div>
                 <p class="brand">{{ product.brand}}</p>
                 <p class="price">{{ formattedPrice}} руб.</p>
@@ -76,6 +76,13 @@ section {
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
+    p {
+        text-align:center;
+        word-break: break-word;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 .brand {
     font-style: italic;

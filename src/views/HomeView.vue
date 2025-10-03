@@ -12,7 +12,7 @@
         <p class="covering">Лучшие товары</p>
         <div class="best-wrapper">
             <ul class="best-catalog">
-                <li v-for="product of bestRating" :key="product.slug">
+                <li v-for="product of bestRatingProducts" :key="product.slug">
                     <ProductCard class="best-product" :product="product"/>
                 </li>
             </ul>
@@ -61,15 +61,13 @@ export default defineComponent({
         }
     },
     async created(): Promise<void> {
-        if (!this.dailyProduct) {
+        if (!this.dailyProduct) 
             await this.productStore.initDailyProduct();
-        }
-        if (!this.productStore.homeBest.productsMap.size) {
+        if (!this.productStore.homeBest.productsMap.size)
             await this.productStore.fetchHomeProducts();
-        }
     },
     computed: {
-        bestRating(): Array<ProductType> {
+        bestRatingProducts(): Array<ProductType> {
             return Array.from(this.productStore.homeBest.productsMap.values());
         },
         dailyProduct(): ProductType {
@@ -84,15 +82,7 @@ export default defineComponent({
     },
     methods: {
         async getMoreBest(): Promise<void> {
-            const root = document.querySelector(".best-catalog") as HTMLElement;
-            if (!root) return;
-        
-            const currentValue = getComputedStyle(root).getPropertyValue("--counter-similar-rows").trim();
-            const nextValue = parseInt(currentValue, 10) + 2;
-        
-            root.style.setProperty("--counter-similar-rows", nextValue.toString());
             this.hidingBestVisible = true;
-
             if (this.productStore.homeBest.nextPage)
                 await this.productStore.fetchHomeProducts(this.productStore.homeBest.nextPage);
         },
@@ -195,22 +185,23 @@ $block-covering-height: 40px;
     font-size: 16px;
 }
 .best-catalog {
-    --counter-similar-rows: 2;    
-    --catalog-max-height: calc((var(--card-height) + var(--gap-y)) * var(--counter-similar-rows));
-    --gap-y: 20px;
-    --card-height: 21vh;
+    --rows: 2;
+    --cols: 3;
+    --card-height: max(230px, 45vw);
+    @media (max-width: 486px) {
+        --card-height: 50vw;
+    }
+    --gap: 10px;
 
-    max-height: var(--catalog-max-height);
-    margin: 10px 0;
     display: grid;
     justify-content: center;
-    gap: 20px 10px;
-
+    grid-template-columns: repeat(var(--cols), minmax(100px, 1fr));
+    grid-auto-rows: var(--card-height);
+    gap: var(--gap);
+    max-height: calc(var(--rows) * (var(--card-height) + var(--gap)));
     list-style-type: none;
-    grid-template-columns: repeat(3, 30vw);
-    grid-template-rows: repeat(var(--counter-similar-rows), 21vh);
     overflow: hidden;
-    margin-bottom: 0;
+    padding: 5px;
 
     transition: max-height 0.5s ease-in-out, grid-template-rows 0.5s ease-in-out;
 }
@@ -219,9 +210,6 @@ $block-covering-height: 40px;
 }
 .reversed {
     transform: rotate(180deg);
-}
-.best-product {
-    margin: 0;  
 }
 @media screen and (min-width: 769px) {
     .daily {

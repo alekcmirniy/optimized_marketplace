@@ -2,7 +2,7 @@
     <div class="cart-product-wrapper" :class="{unchecked: !checked}">
         <router-link class="link" :to="`/product/${product.slug}`">
             <img class = "cart-product-image" :src="imageSource" :alt="'Изображение товара'" />
-        </router-link>
+        </router-link>  
         <aside class="cart-product-description">
             <input type="checkbox" v-model="checked"/>
             <p class="brand">{{ product.brand }}</p>
