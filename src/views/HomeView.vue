@@ -82,6 +82,14 @@ export default defineComponent({
     },
     methods: {
         async getMoreBest(): Promise<void> {
+            const root = document.querySelector(".best-catalog") as HTMLElement;
+            if (!root) return;
+
+            const currentValue = getComputedStyle(root).getPropertyValue("--rows").trim();
+            const nextValue = parseInt(currentValue, 10) + 2;
+        
+            root.style.setProperty("--rows", nextValue.toString());
+
             this.hidingBestVisible = true;
             if (this.productStore.homeBest.nextPage)
                 await this.productStore.fetchHomeProducts(this.productStore.homeBest.nextPage);
@@ -90,7 +98,7 @@ export default defineComponent({
             const root = document.querySelector(".best-catalog") as HTMLElement;
             if (!root) return;
 
-            root.style.setProperty("--counter-similar-rows", "2");
+            root.style.setProperty("--rows", "2");
             this.hidingBestVisible = false;
 
             await this.productStore.fetchHomeProducts();
@@ -176,7 +184,7 @@ $block-covering-height: 40px;
 .buttons-container {
     margin: 0 10px;
     display: flex;
-    gap: 10px;
+    gap: 20px;
 }
 .best-footer {
     width: 100%;
