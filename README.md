@@ -1,4 +1,5 @@
 # Marketplace
+<img width="402" height="859" alt="{AE858254-0349-49BC-9824-AABD677AF1E0}" src="https://github.com/user-attachments/assets/7f42b058-72ac-4271-aed7-5da2b7be6f0e" />
 
 Кратко: Большой проект приложение-маркетплейс на Vue 3 + TypeScript.
 
@@ -11,7 +12,7 @@
 
 ## 🚀 Быстрый старт
 ```bash
-git clone <repo-url>
+git clone https://github.com/alekcmirniy/optimized_marketplace/
 cd marketplace
 npm install
 npm run dev
