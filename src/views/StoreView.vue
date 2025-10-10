@@ -1,5 +1,6 @@
 <template>
     <div class="wrapper">
+        <LoadingScreen v-if="getLoadingState"/>
         <MainHeader :header="headerData" />
 
         <ToTopButton :showButton="userPositionCheck" />
@@ -49,10 +50,13 @@ import Observer from '@/components/Observer.vue';
 import ToTopButton from '@/components/ToTopButton.vue';
 import { checkCategoriesEmpty } from '@/utils/reusable_functions';
 import sal from "sal.js";
-    
+import LoadingScreen from '@/components/LoadingScreen.vue';
+
 export default defineComponent({
     name: "StoreView",
-    components: { MainHeader, ProductCard, CategoriesSection, FilterSection, FilterModal, CategoriesModal, QuestionModal, Observer, ToTopButton },
+    components: { 
+        MainHeader, ProductCard, CategoriesSection, FilterSection, FilterModal, CategoriesModal, 
+        QuestionModal, Observer, ToTopButton, LoadingScreen },
     watch: {
         catalog() {
             this.$nextTick(() => { sal({ root: null, threshold: 0.2, once: true }) })
@@ -83,6 +87,9 @@ export default defineComponent({
         }
     },
     computed: {
+        getLoadingState(): boolean {
+            return this.productStore.loadingScreenActive;
+        },
         currentCategories(): string {
             return this.productStore.categoriesString;
         },
@@ -97,6 +104,12 @@ export default defineComponent({
         }
     },
     methods: {
+        setLoadingState(time: number) {
+            this.productStore.loadingScreenActive = true;
+            setTimeout(() => {
+                this.productStore.loadingScreenActive = false;
+            }, time);
+        },
         openFilterSection(): void {
             this.modal.filters = true;
         },
@@ -106,10 +119,14 @@ export default defineComponent({
         async useFilters(selectedFilter: string): Promise<void> {
             this.modal.filters = false;
             await this.productStore.applyFiltersAndCategories(selectedFilter, this.productStore.currentCategories);
+            this.setLoadingState(500);
+
         },
         async useCategories(selectedCategories: SelectedCategories): Promise<void> {
             this.modal.categories = false;
             await this.productStore.applyFiltersAndCategories(this.currentFilter, selectedCategories);
+            this.setLoadingState(500);
+
         },
         changeQuestionModalVisibility(): void {
             this.questionModal.visible = !this.questionModal.visible;
@@ -125,6 +142,8 @@ export default defineComponent({
             this.productStore.currentFilter
             ? await this.productStore.applyFiltersAndCategories(this.productStore.currentFilter, { types: [], brands: [], subtypes: {} })
             : await this.productStore.applyFiltersAndCategories("", { types: [], brands: [], subtypes: {} });
+            this.setLoadingState(500);
+
         },
         async confirmResetFilters(): Promise<void> {
             this.changeQuestionModalVisibility();
@@ -133,6 +152,8 @@ export default defineComponent({
             checkCategoriesEmpty(this.productStore.currentCategories)
             ? await this.productStore.applyFiltersAndCategories("", { types: [], brands: [], subtypes: {} })
             : await this.productStore.fetchProducts("", this.productStore.currentCategories);
+            this.setLoadingState(500);
+
         },
         useModal(value: string): void {
             if (value === 'reset-categories')
@@ -163,6 +184,7 @@ export default defineComponent({
             await this.productStore.applyFiltersAndCategories(found.filter || "", found.categories || { types: [], brands: [], subtypes: {} });
     },
     mounted() {
+        this.setLoadingState(500);
         document.addEventListener("scroll", this.handleScroll);
         this.$nextTick(() => { sal({ root: null, threshold: 0.2, once: true }) })
     },

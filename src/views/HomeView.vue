@@ -1,5 +1,6 @@
 <template>
     <div class="wrapper">
+        <LoadingScreen v-if="getLoadingState"/>
         <MainHeader :header="headerData" />
         <div data-sal="slide-up" data-sal-duration="150">
             <p class="covering">Подборки дня</p>
@@ -44,10 +45,11 @@ import { type Slide } from '@/utils/slides';
 import { defineComponent } from 'vue';
 import type { ProductType } from '@/types/interfaces';
 import sal from "sal.js";
+import LoadingScreen from '@/components/LoadingScreen.vue';
 
 export default defineComponent({
     name: "HomeView",
-    components: { MainHeader, ProductCard, CompilationSlider },
+    components: { MainHeader, ProductCard, CompilationSlider, LoadingScreen },
     data() {
         return {
             headerData: {
@@ -65,8 +67,12 @@ export default defineComponent({
             await this.productStore.initDailyProduct();
         if (!this.productStore.homeBest.productsMap.size)
             await this.productStore.fetchHomeProducts();
+        
     },
     computed: {
+        getLoadingState(): boolean {
+            return this.productStore.loadingScreenActive;
+        },
         bestRatingProducts(): Array<ProductType> {
             return Array.from(this.productStore.homeBest.productsMap.values());
         },
@@ -81,6 +87,12 @@ export default defineComponent({
         }
     },
     methods: {
+        setLoadingState(time: number) {
+            this.productStore.loadingScreenActive = true;
+            setTimeout(() => {
+                this.productStore.loadingScreenActive = false;
+            }, time);
+        },
         async getMoreBest(): Promise<void> {
             const root = document.querySelector(".best-catalog") as HTMLElement;
             if (!root) return;
@@ -105,6 +117,7 @@ export default defineComponent({
         }
     },
     mounted() {
+        this.setLoadingState(500);
         this.$nextTick(() => { sal({ root: null, threshold: 0.2, once: true }) });
     }
 });
@@ -187,6 +200,7 @@ $block-covering-height: 40px;
     gap: 20px;
 }
 .best-footer {
+    margin-top: 5px;
     width: 100%;
     display: flex;
     gap: 5px;

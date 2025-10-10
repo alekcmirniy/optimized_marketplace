@@ -1,19 +1,21 @@
 <template>
-    <nav class="nav-bar" role="navigation" aria-label="Навигационное меню">
-        <ul class = "nav-list">
-            <li class="nav-item" v-for="link in links" :key="link.name">
-                <router-link
-                :to="link.path"
-                class="nav-link"
-                active-class="router-link-active"
-                aria-current="page"
-                >
-                {{ link.label }}
-                <img :src="link.src" :alt="link.alt" class="nav-icon" />
-                </router-link>
-            </li>
-        </ul>
-    </nav>
+    <div class="wrapper">
+        <nav class="nav-bar" role="navigation" aria-label="Навигационное меню">
+            <ul class = "nav-list">
+                <li class="nav-item" v-for="link in links" :key="link.name">
+                    <router-link
+                    :to="link.path"
+                    class="nav-link"
+                    active-class="router-link-active"
+                    aria-current="page"
+                    >
+                    {{ link.label }}
+                    <img :src="link.src" :alt="link.alt" class="nav-icon" />
+                    </router-link>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </template>
 
 <script lang="ts">
@@ -44,7 +46,6 @@ export default defineComponent({
 @use '/src/assets/variables' as vars;
 $nav-item-color: rgb(238, 225, 235);
 $nav-bar-color: vars.$supporting-golden-lighten;
-
 .nav-bar {
     position:fixed;
     bottom: 0;
@@ -55,7 +56,7 @@ $nav-bar-color: vars.$supporting-golden-lighten;
     justify-content: center;
     align-items: center;
     outline: solid 1px black;
-    z-index: 1000;
+    z-index: 100;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     background: rgba(20, 20, 20, 0.6);

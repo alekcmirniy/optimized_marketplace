@@ -23,6 +23,7 @@ export const useProductStore = defineStore("ProductStore", {
         currentCategories: { types: [], brands: [], subtypes: {} } as SelectedCategories,
 
         isLoading: false,
+        loadingScreenActive: false,
         error: null as string | null,
         nextPage: null as string | null
     }),
@@ -64,11 +65,11 @@ export const useProductStore = defineStore("ProductStore", {
             catch (error: unknown) {
                 if (error instanceof Error)
                     this.error = error.message || "Ошибка загрузки списка товаров!";
-                else 
+                else
                     this.error = "Неизвестная ошибка!";
             }
             finally {
-                this.isLoading = false;
+                setTimeout(() => (this.isLoading = false), 300);
             }
         },
 
@@ -106,7 +107,7 @@ export const useProductStore = defineStore("ProductStore", {
                         this.homeBest.productsMap.clear();
                         res.data.results.forEach(item => this.homeBest.productsMap.set(item.slug, item));
                     }
-                    this.homeBest.nextPage = res.data.next ? res.data.next.substring(res.data.next.indexOf("api/")) : null;                
+                    this.homeBest.nextPage = res.data.next ? res.data.next.substring(res.data.next.indexOf("api/")) : null;
                 }
                 else throw new Error("Некорректный ответ с сервера при запросе списка товаров домашней страницы!");
             }
@@ -117,10 +118,10 @@ export const useProductStore = defineStore("ProductStore", {
                     this.error = "Неизвестная ошибка!";
             }
             finally {
-                this.isLoading = false;
+                setTimeout(() => (this.isLoading = false), 300);
             }
         },
-        
+
         async fetchDailyProduct(): Promise<ProductType | null> {
             this.isLoading = true;
             this.error = null;
@@ -140,11 +141,11 @@ export const useProductStore = defineStore("ProductStore", {
                 dailyProduct = null;
             }
             finally {
-                this.isLoading = false;
+                setTimeout(() => (this.isLoading = false), 300);
                 return dailyProduct;
             }
         },
-        
+
         async fetchFiltersAndCategories(): Promise<void> {
             this.isLoading = true;
             this.error = null;
@@ -162,7 +163,7 @@ export const useProductStore = defineStore("ProductStore", {
                     this.error = "Неизвестная ошибка!";
             }
             finally {
-                this.isLoading = false;
+                setTimeout(() => (this.isLoading = false), 300);
             }
         },
 
@@ -193,11 +194,11 @@ export const useProductStore = defineStore("ProductStore", {
 
         getProductBySlug(slug: string): ProductType | null {
             return this.productsMap.get(slug)
-            || this.homeBest.productsMap.get(slug)
-            || null;
+                || this.homeBest.productsMap.get(slug)
+                || null;
         }
     },
-    
+
     getters: {
         categoriesString: (state) => {
             const { brands, types, subtypes } = state.currentCategories;

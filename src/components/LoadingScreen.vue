@@ -8,21 +8,36 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-    data() {
-        return {
-                //ее надо растянуть по всему экрану и сделать непрозрачной??
+    methods: {
+        disableBodyScroll(): void {
+            const bodyStyles = document.body.style;
+            bodyStyles.setProperty("overflow", "hidden");
+        },
+        enableBodyScroll(): void {
+            const bodyStyles = document.body.style;
+            bodyStyles.setProperty("overflow", "auto");
         }
+    },
+    mounted() {
+        this.disableBodyScroll();
+    },
+    unmounted() {
+        this.enableBodyScroll();
     }
 })
 </script>
 
 <style scoped lang="scss">
 .screen-wrapper {
-    background: white;
+    inset: 0;
+    background: rgb(10, 1, 1, 0.3);
+    position: fixed;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     img {
-        z-index: 1;
+        width: 140px;
     }
 }
-
-
 </style>
