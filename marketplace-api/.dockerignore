@@ -1,0 +1,35 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Виртуальные окружения
+.venv/
+venv/
+env/
+ENV/
+
+# IDE/редакторы
+.idea/
+.vscode/
+*.code-workspace
+
+# Git
+.git/
+.gitignore
+
+# Локальные файлы настроек и секреты
+.env
+*.env
+
+# Логи, базы данных, артефакты
+*.log
+*.sqlite3
+*.pyc
+
+# Docker‑связанные
+docker-compose.override.yml
+
+# Прочее (подставьте свои)
+.DS_Store
+staticfiles/
